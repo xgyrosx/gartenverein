@@ -55,10 +55,10 @@ export default buildConfig({
   sharp,
   plugins: [
     seoPlugin({
-      collections: ['seiten', 'news'],
+      collections: ['seiten', 'news', 'termine', 'areale'],
       uploadsCollection: 'media',
-      generateTitle: ({ doc }) => (doc as { title?: string }).title ?? '',
-      generateDescription: ({ doc }) => (doc as { teaser?: string }).teaser ?? '',
+      generateTitle: ({ doc }) => (doc as { title?: string; name?: string }).title ?? (doc as { name?: string }).name ?? '',
+      generateDescription: ({ doc }) => (doc as { teaser?: string; summary?: string }).teaser ?? (doc as { summary?: string }).summary ?? '',
     }),
   ],
 })

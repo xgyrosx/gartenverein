@@ -7,7 +7,7 @@ import type { Seiten } from '@/payload-types'
 type Block = Extract<NonNullable<Seiten['layout']>[number], { blockType: 'naechsteTermine' }>
 
 export async function NaechsteTermineBlock({ block }: { block: Block }) {
-  const termine = await getUpcomingTermine(block.count)
+  const termine = await getUpcomingTermine(block.count, block.category)
   return (
     <section className="mx-auto max-w-content px-4 py-8">
       <h2 className="mb-4 text-2xl font-bold text-brand-900">{block.title || 'Nächste Termine'}</h2>

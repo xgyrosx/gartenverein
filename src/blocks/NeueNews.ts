@@ -2,7 +2,7 @@ import type { Block } from 'payload'
 
 export const NeueNews: Block = {
   slug: 'neueNews',
-  labels: { singular: 'Neueste News', plural: 'Neueste News' },
+  labels: { singular: 'Newsliste (neueste News)', plural: 'Newslisten' },
   fields: [
     { name: 'title', type: 'text', label: 'Überschrift', defaultValue: 'Neueste News' },
     {

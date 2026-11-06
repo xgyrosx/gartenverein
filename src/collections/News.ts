@@ -54,6 +54,12 @@ export const News: CollectionConfig = {
       label: 'Titelbild',
       admin: { description: 'Optional.' },
     },
+    {
+      name: 'imageCaption',
+      type: 'text',
+      label: 'Bildunterschrift / Bildnachweis',
+      admin: { description: 'Optional, z. B. «Foto: Vorname Nachname».' },
+    },
     { name: 'content', type: 'richText', label: 'Inhalt', required: true },
   ],
 }

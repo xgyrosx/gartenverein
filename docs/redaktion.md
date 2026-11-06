@@ -38,3 +38,10 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Areale:** Verein → **Areale** → «Neu erstellen» (Name, Kurzbeschrieb, Adresse, Bilder, Parkplätze). Koordinaten sind optional; sie verbessern den Link «Route/Karte öffnen» (OpenStreetMap).
 - **Öffnungszeiten Materialhütte:** Verein → **Öffnungszeiten Materialhütte**. Reguläre Tage und Ausnahmen (z. B. Ferien) eintragen; sie erscheinen überall, wo der Baustein «Öffnungszeiten» steht.
 - Neue Bausteine: «Personenraster», «Öffnungszeiten», «Kontaktdaten des Vereins» (aus den Vereinsdaten) und «Tabelle (Preisliste)».
+
+## Aktuelles und Termine (R8)
+- **Termin erfassen:** Inhalte → **Termine** → «Neu erstellen». Kategorie (Kurs, Anlass, Arbeitseinsatz, Betrieb), Beginn und optional Ende wählen; Areal oder Ort angeben. Mit «Anmeldung nötig» erscheint ein Hinweis (und optional ein Link). Die Adresse wird aus Titel und Datum erzeugt.
+- **Anstehend und Archiv:** Die Website zeigt kommende Termine nach Monat gruppiert; vergangene Termine wandern automatisch ins Archiv (nach Jahr). Es muss nichts verschoben werden.
+- **Kalender:** Jeder Termin hat einen Link «Zum Kalender hinzufügen»; auf der Terminseite gibt es ausserdem ein Kalender-Abo (ICS) für alle kommenden Termine.
+- **News:** neu sind das Feld «Bildunterschrift / Bildnachweis» und die Seitennummerierung im Archiv (9 Beiträge pro Seite).
+- Die Bausteine heissen jetzt «Newsliste» und «Terminliste» (Anzahl und – bei Terminen – Kategorie wählbar).

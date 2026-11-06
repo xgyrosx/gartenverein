@@ -53,19 +53,28 @@ export async function seedAktuelles({ payload, create, upload, count }: Ctx) {
   }
 
   if ((await count('termine')) === 0) {
+    const { docs: areale } = await payload.find({ collection: 'areale', limit: 1, sort: 'name' })
+    const areal = areale[0]?.id
     const termine = [
-      { title: 'Arbeitseinsatz im Herbst', days: 9, hour: 7, location: 'Vereinsgarten', text: 'Wir räumen Beete ab, schneiden Sträucher und bereiten den Winter vor. Bitte Arbeitshandschuhe mitbringen. Zum Abschluss gibt es eine Suppe.' },
-      { title: 'Gartenkurs: Obstbäume schneiden', days: 16, hour: 8, location: 'Vereinshaus', text: 'Ein erfahrenes Mitglied zeigt, wie Obstbäume richtig geschnitten werden. Anmeldung nicht nötig.' },
-      { title: 'Vorstandssitzung', days: 23, hour: 17, location: 'Vereinshaus', text: '' },
-      { title: 'Generalversammlung', days: 60, hour: 18, location: 'Vereinshaus', text: 'Die Einladung mit der Traktandenliste erhalten alle Mitglieder per Post.' },
+      { title: 'Arbeitseinsatz im Herbst', category: 'arbeitseinsatz', days: 9, hour: 7, endHour: 11, areal, text: 'Wir räumen Beete ab, schneiden Sträucher und bereiten den Winter vor. Bitte Arbeitshandschuhe mitbringen. Zum Abschluss gibt es eine Suppe.' },
+      { title: 'Gartenkurs: Obstbäume schneiden', category: 'kurs', days: 16, hour: 8, endHour: 10, location: 'Vereinshaus', registrationRequired: true, registrationText: 'Bitte bis drei Tage vorher beim Vorstand anmelden (Beispiel).', text: 'Ein erfahrenes Mitglied zeigt, wie Obstbäume richtig geschnitten werden.' },
+      { title: 'Vorstandssitzung', category: 'betrieb', days: 23, hour: 17, location: 'Vereinshaus', text: '' },
+      { title: 'Generalversammlung', category: 'anlass', days: 60, hour: 18, location: 'Vereinshaus', text: 'Die Einladung mit der Traktandenliste erhalten alle Mitglieder per Post.' },
+      { title: 'Sommerfest (Rückblick)', category: 'anlass', days: -40, hour: 11, endHour: 18, areal, text: 'Das Sommerfest war gut besucht. Danke allen Helferinnen und Helfern.' },
+      { title: 'Generalversammlung Vorjahr', category: 'anlass', days: -400, hour: 18, location: 'Vereinshaus', text: '' },
     ]
     for (const t of termine) {
       await create(
         'termine',
         {
           title: t.title,
+          category: t.category,
           startDate: inDays(t.days, t.hour),
+          endDate: t.endHour ? inDays(t.days, t.endHour) : undefined,
+          areal: t.areal,
           location: t.location,
+          registrationRequired: t.registrationRequired ?? false,
+          registrationText: t.registrationText,
           description: t.text ? richText(paragraph(t.text)) : undefined,
           _status: 'published',
         },

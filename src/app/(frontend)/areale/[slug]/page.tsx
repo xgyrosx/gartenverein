@@ -6,6 +6,7 @@ import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
 import { getAreal, getPublishedSlugs } from '@/lib/content'
 import { osmLink } from '@/lib/osm'
+import { buildMetadata } from '@/lib/seo'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const a = await getAreal(slug)
   if (!a) notFound()
-  return { title: a.name, description: a.summary }
+  return buildMetadata({ seo: a.meta, fallbackTitle: a.name, fallbackDescription: a.summary })
 }
 
 export default async function ArealDetail({ params }: Args) {

@@ -29,3 +29,11 @@ export function formatFileSize(bytes: number | null | undefined): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`
   return `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} MB`
 }
+
+/** «Samstag, 15. November 2026, 08:00 – 12:00 Uhr» (Ende am selben Tag) bzw. mit Enddatum. */
+export function formatRange(startIso: string, endIso?: string | null): string {
+  const start = formatDateTime(startIso)
+  if (!endIso) return start
+  const sameDay = new Date(startIso).toLocaleDateString('sv-SE', { timeZone: TZ }) === new Date(endIso).toLocaleDateString('sv-SE', { timeZone: TZ })
+  return sameDay ? `${start} – ${formatTime(endIso)}` : `${start} – ${formatDateTime(endIso)}`
+}

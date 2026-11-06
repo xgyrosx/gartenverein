@@ -1,8 +1,10 @@
 import type { Block } from 'payload'
 
+import { terminKategorien } from '@/collections/Termine'
+
 export const NaechsteTermine: Block = {
   slug: 'naechsteTermine',
-  labels: { singular: 'Nächste Termine', plural: 'Nächste Termine' },
+  labels: { singular: 'Terminliste (kommende Termine)', plural: 'Terminlisten' },
   fields: [
     { name: 'title', type: 'text', label: 'Überschrift', defaultValue: 'Nächste Termine' },
     {
@@ -14,6 +16,13 @@ export const NaechsteTermine: Block = {
       min: 1,
       max: 12,
       admin: { step: 1, description: 'Wie viele Termine angezeigt werden (1–12).' },
+    },
+    {
+      name: 'category',
+      type: 'select',
+      label: 'Nur diese Kategorie',
+      options: terminKategorien,
+      admin: { description: 'Leer lassen, um alle Kategorien zu zeigen.' },
     },
   ],
 }

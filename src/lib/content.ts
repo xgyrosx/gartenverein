@@ -35,11 +35,14 @@ export async function getNews(slug: string): Promise<News | null> {
   return docs[0] ?? null
 }
 
-export async function getUpcomingTermine(limit = 50): Promise<Termine[]> {
+export async function getUpcomingTermine(limit = 100, category?: Termine['category'] | null): Promise<Termine[]> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'termine',
-    where: { startDate: { greater_than_equal: new Date().toISOString() } },
+    where: {
+      startDate: { greater_than_equal: new Date().toISOString() },
+      ...(category ? { category: { equals: category } } : {}),
+    },
     sort: 'startDate',
     limit,
     depth: 1,
@@ -50,8 +53,81 @@ export async function getUpcomingTermine(limit = 50): Promise<Termine[]> {
   return docs
 }
 
+/** Vergangene Termine eines Jahres (neueste zuerst). */
+export async function getPastTermine(year: number): Promise<Termine[]> {
+  const payload = await getPayload({ config })
+  const now = new Date().toISOString()
+  const yearEnd = new Date(Date.UTC(year + 1, 0, 1)).toISOString()
+  const { docs } = await payload.find({
+    collection: 'termine',
+    where: {
+      and: [
+        { startDate: { less_than: now } },
+        { startDate: { greater_than_equal: new Date(Date.UTC(year, 0, 1)).toISOString() } },
+        { startDate: { less_than: yearEnd } },
+      ],
+    },
+    sort: '-startDate',
+    limit: 500,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
+}
+
+/** Jahre, in denen es vergangene Termine gibt (neueste zuerst). */
+export async function getTerminJahre(): Promise<number[]> {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'termine',
+    where: { startDate: { less_than: new Date().toISOString() } },
+    limit: 2000,
+    depth: 0,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+    select: { startDate: true },
+  })
+  const years = new Set(docs.map((d) => new Date(d.startDate).getUTCFullYear()))
+  return [...years].sort((x, y) => y - x)
+}
+
+export async function getTermin(slug: string): Promise<Termine | null> {
+  const payload = await getPayload({ config })
+  const { draft, user } = await getDraftContext()
+  const { docs } = await payload.find({
+    collection: 'termine',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+    draft,
+    user,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs[0] ?? null
+}
+
+export const NEWS_PAGE_SIZE = 9
+
+export async function getNewsPage(page: number) {
+  const payload = await getPayload({ config })
+  const res = await payload.find({
+    collection: 'news',
+    sort: '-publishedAt',
+    page,
+    limit: NEWS_PAGE_SIZE,
+    depth: 1,
+    draft: false,
+    overrideAccess: false,
+  })
+  return { docs: res.docs, totalPages: res.totalPages, page: res.page ?? page }
+}
+
 /** Adressen aller veröffentlichten Seiten bzw. News (für statische Generierung und Sitemap). */
-export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale'): Promise<{ slug: string; updatedAt: string }[]> {
+export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale' | 'termine'): Promise<{ slug: string; updatedAt: string }[]> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection,

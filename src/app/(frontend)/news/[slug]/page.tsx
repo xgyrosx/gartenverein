@@ -39,7 +39,12 @@ export default async function NewsDetail({ params }: Args) {
       </time>
       <h1 className="mt-1 text-4xl font-bold text-brand-900">{news.title}</h1>
       <p className="mt-4 text-xl leading-relaxed">{news.teaser}</p>
-      <Img media={news.image} size="gross" priority sizes="(min-width: 768px) 768px, 100vw" className="mt-6 h-auto w-full rounded-lg" />
+      {typeof news.image === 'object' && news.image && (
+        <figure className="mt-6">
+          <Img media={news.image} size="gross" priority sizes="(min-width: 768px) 768px, 100vw" className="h-auto w-full rounded-lg" />
+          {news.imageCaption && <figcaption className="mt-2 text-sm text-muted-foreground">{news.imageCaption}</figcaption>}
+        </figure>
+      )}
       <RichText data={news.content} className="mt-8" />
     </article>
   )

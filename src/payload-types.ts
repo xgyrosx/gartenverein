@@ -380,6 +380,10 @@ export interface Seiten {
              * Wie viele Termine angezeigt werden (1–12).
              */
             count: number;
+            /**
+             * Leer lassen, um alle Kategorien zu zeigen.
+             */
+            category?: ('kurs' | 'anlass' | 'arbeitseinsatz' | 'betrieb') | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'naechsteTermine';
@@ -480,6 +484,10 @@ export interface News {
    * Optional.
    */
   image?: (number | null) | Media;
+  /**
+   * Optional, z. B. «Foto: Vorname Nachname».
+   */
+  imageCaption?: string | null;
   content: {
     root: {
       type: string;
@@ -508,7 +516,7 @@ export interface News {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Veranstaltungen und Arbeitseinsätze. Auf der Website erscheinen nur kommende Termine.
+ * Kurse, Anlässe und Arbeitseinsätze. Kommende Termine erscheinen auf der Website, vergangene im Archiv.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "termine".
@@ -517,13 +525,35 @@ export interface Termine {
   id: number;
   title: string;
   /**
-   * Beginn des Termins.
+   * Teil der Internetadresse. Wird aus Titel und Datum erzeugt, wenn leer.
+   */
+  slug: string;
+  category: 'kurs' | 'anlass' | 'arbeitseinsatz' | 'betrieb';
+  /**
+   * Datum und Uhrzeit des Beginns.
    */
   startDate: string;
   /**
-   * Z. B. «Vereinshaus» oder «Parzelle 12».
+   * Optional.
+   */
+  endDate?: string | null;
+  /**
+   * Optional. Findet der Termin auf einem unserer Areale statt?
+   */
+  areal?: (number | null) | Areale;
+  /**
+   * Z. B. «Vereinshaus» oder «Treffpunkt beim Eingang».
    */
   location?: string | null;
+  registrationRequired?: boolean | null;
+  /**
+   * Z. B. «Bitte bis 3 Tage vorher per E-Mail anmelden.»
+   */
+  registrationText?: string | null;
+  /**
+   * Optional, beginnt mit https://
+   */
+  registrationUrl?: string | null;
   /**
    * Optional. Was passiert, was mitbringen?
    */
@@ -542,6 +572,14 @@ export interface Termine {
     };
     [k: string]: unknown;
   } | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -600,6 +638,14 @@ export interface Areale {
     };
     [k: string]: unknown;
   } | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -950,6 +996,7 @@ export interface SeitenSelect<T extends boolean = true> {
           | {
               title?: T;
               count?: T;
+              category?: T;
               id?: T;
               blockName?: T;
             };
@@ -983,6 +1030,7 @@ export interface NewsSelect<T extends boolean = true> {
   publishedAt?: T;
   teaser?: T;
   image?: T;
+  imageCaption?: T;
   content?: T;
   meta?:
     | T
@@ -1001,9 +1049,23 @@ export interface NewsSelect<T extends boolean = true> {
  */
 export interface TermineSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
+  category?: T;
   startDate?: T;
+  endDate?: T;
+  areal?: T;
   location?: T;
+  registrationRequired?: T;
+  registrationText?: T;
+  registrationUrl?: T;
   description?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1024,6 +1086,13 @@ export interface ArealeSelect<T extends boolean = true> {
   images?: T;
   parking?: T;
   content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
