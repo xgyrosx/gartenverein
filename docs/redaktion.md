@@ -27,3 +27,8 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Termin:** Inhalte → Termine → «Neu erstellen». Nur kommende Termine erscheinen auf der Website.
 - **Menü:** Einstellungen → Navigation. Neue Seiten erst veröffentlichen, dann im Menü auswählen. Ein Punkt kann als Button hervorgehoben werden.
 - **Hinweisbanner:** Einstellungen → Hinweisbanner. Text eingeben, «Banner anzeigen» ankreuzen, optional Zeitraum und Link.
+
+## Preise und Gartenangebote (R6)
+- **Preise ändern:** Garten → **Konditionen (Preise)**. Das ist die einzige Stelle für Preise; sie erscheinen überall, wo der Baustein «Preistabelle» steht. Solange «nur Beispielwerte» angekreuzt ist, steht bei den Preisen «Beispiel – vom Verein zu bestätigen».
+- **Freie Gärten melden:** Garten → **Gartenangebote** → «Neu erstellen». Art und Status (Verfügbar / Nur Warteliste / Ausgebucht) wählen und veröffentlichen. Der Status erscheint auf «Garten pachten» als Text.
+- **Neue Bausteine für Seiten:** «Karten» (Info-Karten mit Link), «Ablauf» (nummerierte Schritte), «Preistabelle», «Angebotsliste». Im «Hero» kann ein Button eingeblendet werden.

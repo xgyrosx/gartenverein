@@ -9,10 +9,12 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Gartenangebote } from './collections/Gartenangebote'
 import { News } from './collections/News'
 import { Seiten } from './collections/Seiten'
 import { Termine } from './collections/Termine'
 import { Fusszeile } from './globals/Fusszeile'
+import { Konditionen } from './globals/Konditionen'
 import { Hinweisbanner } from './globals/Hinweisbanner'
 import { Navigation } from './globals/Navigation'
 import { Vereinsdaten } from './globals/Vereinsdaten'
@@ -28,8 +30,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Seiten, News, Termine, Media, Users],
-  globals: [Navigation, Hinweisbanner, Fusszeile, Vereinsdaten],
+  collections: [Seiten, News, Termine, Gartenangebote, Media, Users],
+  globals: [Navigation, Hinweisbanner, Fusszeile, Vereinsdaten, Konditionen],
   editor: lexicalEditor(),
   i18n: {
     supportedLanguages: { de },

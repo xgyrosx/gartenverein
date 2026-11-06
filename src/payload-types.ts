@@ -70,6 +70,7 @@ export interface Config {
     seiten: Seiten;
     news: News;
     termine: Termine;
+    gartenangebote: Gartenangebote;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -82,6 +83,7 @@ export interface Config {
     seiten: SeitenSelect<false> | SeitenSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     termine: TermineSelect<false> | TermineSelect<true>;
+    gartenangebote: GartenangeboteSelect<false> | GartenangeboteSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -98,12 +100,14 @@ export interface Config {
     hinweisbanner: Hinweisbanner;
     fusszeile: Fusszeile;
     vereinsdaten: Vereinsdaten;
+    konditionen: Konditionen;
   };
   globalsSelect: {
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     hinweisbanner: HinweisbannerSelect<false> | HinweisbannerSelect<true>;
     fusszeile: FusszeileSelect<false> | FusszeileSelect<true>;
     vereinsdaten: VereinsdatenSelect<false> | VereinsdatenSelect<true>;
+    konditionen: KonditionenSelect<false> | KonditionenSelect<true>;
   };
   locale: null;
   widgets: {
@@ -161,6 +165,16 @@ export interface Seiten {
              * Optional. Querformat funktioniert am besten.
              */
             image?: (number | null) | Media;
+            hasButton?: boolean | null;
+            button?: {
+              label: string;
+              linkType: 'seite' | 'adresse';
+              page?: (number | null) | Seiten;
+              /**
+               * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+               */
+              url?: string | null;
+            };
             id?: string | null;
             blockName?: string | null;
             blockType: 'hero';
@@ -242,6 +256,64 @@ export interface Seiten {
             blockType: 'hinweisbox';
           }
         | {
+            /**
+             * Optional.
+             */
+            title?: string | null;
+            cards?:
+              | {
+                  title: string;
+                  text?: string | null;
+                  /**
+                   * Z. B. «Mehr erfahren».
+                   */
+                  label: string;
+                  linkType: 'seite' | 'adresse';
+                  page?: (number | null) | Seiten;
+                  /**
+                   * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+                   */
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'karten';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Die Schritte werden automatisch nummeriert.
+             */
+            steps?:
+              | {
+                  title: string;
+                  text?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'ablauf';
+          }
+        | {
+            title?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'preistabelle';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Leer lassen, um alle Angebote zu zeigen.
+             */
+            type?: ('parzelle-miete' | 'haus-kauf' | 'gemeinschaftsgarten') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'angebotsliste';
+          }
+        | {
             title?: string | null;
             /**
              * Wie viele Beiträge angezeigt werden (1–12).
@@ -260,6 +332,13 @@ export interface Seiten {
             id?: string | null;
             blockName?: string | null;
             blockType: 'naechsteTermine';
+          }
+        | {
+            title?: string | null;
+            count: number;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'diesenMonat';
           }
       )[]
     | null;
@@ -417,6 +496,35 @@ export interface Termine {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Freie und belegte Gärten bzw. Häuser. Wird auf der Seite «Garten pachten» angezeigt.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gartenangebote".
+ */
+export interface Gartenangebote {
+  id: number;
+  /**
+   * Z. B. «Parzelle 12 mit Gartenhaus».
+   */
+  title: string;
+  type: 'parzelle-miete' | 'haus-kauf' | 'gemeinschaftsgarten';
+  /**
+   * Der Status wird auf der Website immer als Text angezeigt.
+   */
+  status: 'verfuegbar' | 'warteliste' | 'ausgebucht';
+  /**
+   * Optional.
+   */
+  area?: number | null;
+  /**
+   * Optional, z. B. «Besichtigung nach Absprache».
+   */
+  hinweis?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Personen, die sich im Verwaltungsbereich anmelden dürfen.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -485,6 +593,10 @@ export interface PayloadLockedDocument {
         value: number | Termine;
       } | null)
     | ({
+        relationTo: 'gartenangebote';
+        value: number | Gartenangebote;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -550,6 +662,15 @@ export interface SeitenSelect<T extends boolean = true> {
               title?: T;
               subtitle?: T;
               image?: T;
+              hasButton?: T;
+              button?:
+                | T
+                | {
+                    label?: T;
+                    linkType?: T;
+                    page?: T;
+                    url?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -578,6 +699,53 @@ export interface SeitenSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        karten?:
+          | T
+          | {
+              title?: T;
+              cards?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    label?: T;
+                    linkType?: T;
+                    page?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        ablauf?:
+          | T
+          | {
+              title?: T;
+              steps?:
+                | T
+                | {
+                    title?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        preistabelle?:
+          | T
+          | {
+              title?: T;
+              id?: T;
+              blockName?: T;
+            };
+        angebotsliste?:
+          | T
+          | {
+              title?: T;
+              type?: T;
+              id?: T;
+              blockName?: T;
+            };
         neueNews?:
           | T
           | {
@@ -587,6 +755,14 @@ export interface SeitenSelect<T extends boolean = true> {
               blockName?: T;
             };
         naechsteTermine?:
+          | T
+          | {
+              title?: T;
+              count?: T;
+              id?: T;
+              blockName?: T;
+            };
+        diesenMonat?:
           | T
           | {
               title?: T;
@@ -637,6 +813,20 @@ export interface TermineSelect<T extends boolean = true> {
   startDate?: T;
   location?: T;
   description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gartenangebote_select".
+ */
+export interface GartenangeboteSelect<T extends boolean = true> {
+  title?: T;
+  type?: T;
+  status?: T;
+  area?: T;
+  hinweis?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -911,6 +1101,45 @@ export interface Vereinsdaten {
   createdAt?: string | null;
 }
 /**
+ * Einzige Quelle für alle Preise. Sie erscheinen überall, wo der Baustein «Preistabelle» eingebunden ist.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "konditionen".
+ */
+export interface Konditionen {
+  id: number;
+  pachtarten?:
+    | {
+        /**
+         * Z. B. «Parzelle klein».
+         */
+        name: string;
+        from: number;
+        /**
+         * Leer lassen, wenn es nur einen Preis gibt.
+         */
+        to?: number | null;
+        /**
+         * Optional, z. B. «inkl. Wasser».
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  entryFee?: number | null;
+  deposit?: number | null;
+  /**
+   * Erscheint unter der Preistabelle.
+   */
+  note?: string | null;
+  /**
+   * Solange angekreuzt, steht bei den Preisen «Beispiel – vom Verein zu bestätigen». Haken entfernen, sobald die Preise geprüft sind.
+   */
+  isExample?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation_select".
  */
@@ -1002,6 +1231,28 @@ export interface VereinsdatenSelect<T extends boolean = true> {
   city?: T;
   email?: T;
   phone?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "konditionen_select".
+ */
+export interface KonditionenSelect<T extends boolean = true> {
+  pachtarten?:
+    | T
+    | {
+        name?: T;
+        from?: T;
+        to?: T;
+        note?: T;
+        id?: T;
+      };
+  entryFee?: T;
+  deposit?: T;
+  note?: T;
+  isExample?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -2,12 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate'
 import { isAdmin, loggedIn, publishedOrLoggedIn } from '@/access'
-import { BildText } from '@/blocks/BildText'
-import { Hero } from '@/blocks/Hero'
-import { Hinweisbox } from '@/blocks/Hinweisbox'
-import { NaechsteTermine } from '@/blocks/NaechsteTermine'
-import { NeueNews } from '@/blocks/NeueNews'
-import { Text } from '@/blocks/Text'
+import { pageBlocks } from '@/blocks'
 import { slugField } from '@/fields/slug'
 
 export const Seiten: CollectionConfig = {
@@ -39,7 +34,7 @@ export const Seiten: CollectionConfig = {
       name: 'layout',
       type: 'blocks',
       label: 'Inhalt',
-      blocks: [Hero, Text, BildText, Hinweisbox, NeueNews, NaechsteTermine],
+      blocks: pageBlocks,
       admin: { description: 'Bausteine hinzufügen und mit dem Ziehgriff in die richtige Reihenfolge bringen.' },
     },
   ],

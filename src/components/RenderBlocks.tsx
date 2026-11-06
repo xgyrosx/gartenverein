@@ -1,3 +1,8 @@
+import { AblaufBlock } from '@/components/blocks/AblaufBlock'
+import { AngebotslisteBlock } from '@/components/blocks/AngebotslisteBlock'
+import { DiesenMonatBlock } from '@/components/blocks/DiesenMonatBlock'
+import { KartenBlock } from '@/components/blocks/KartenBlock'
+import { PreistabelleBlock } from '@/components/blocks/PreistabelleBlock'
 import { BildTextBlock } from '@/components/blocks/BildTextBlock'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { HinweisboxBlock } from '@/components/blocks/HinweisboxBlock'
@@ -24,6 +29,16 @@ export function RenderBlocks({ blocks }: { blocks: NonNullable<Seiten['layout']>
             return <NeueNewsBlock key={key} block={block} />
           case 'naechsteTermine':
             return <NaechsteTermineBlock key={key} block={block} />
+          case 'karten':
+            return <KartenBlock key={key} block={block} />
+          case 'ablauf':
+            return <AblaufBlock key={key} block={block} />
+          case 'preistabelle':
+            return <PreistabelleBlock key={key} block={block} />
+          case 'angebotsliste':
+            return <AngebotslisteBlock key={key} block={block} />
+          case 'diesenMonat':
+            return <DiesenMonatBlock key={key} block={block} />
           default:
             return null
         }

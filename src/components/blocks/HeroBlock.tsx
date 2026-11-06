@@ -1,9 +1,11 @@
 import { Img } from '@/components/Img'
-import type { Seiten } from '@/payload-types'
+import { NavLink } from '@/components/layout/NavLink'
+import { Button } from '@/components/ui/button'
+import type { BlockOf } from '@/components/blocks/types'
+import { resolveLink } from '@/lib/resolveLink'
 
-type Block = Extract<NonNullable<Seiten['layout']>[number], { blockType: 'hero' }>
-
-export function HeroBlock({ block }: { block: Block }) {
+export function HeroBlock({ block }: { block: BlockOf<'hero'> }) {
+  const button = block.hasButton && block.button ? resolveLink(block.button) : null
   return (
     <section className="relative isolate overflow-hidden bg-brand-900 text-white">
       <Img media={block.image} fill priority sizes="100vw" className="-z-20 object-cover" />
@@ -11,6 +13,13 @@ export function HeroBlock({ block }: { block: Block }) {
       <div className="mx-auto max-w-page px-4 py-20 sm:py-28">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{block.title}</h1>
         {block.subtitle && <p className="mt-4 max-w-2xl text-xl leading-relaxed">{block.subtitle}</p>}
+        {button && (
+          <Button asChild variant="secondary" size="lg" className="mt-8 text-base">
+            <NavLink href={button.href} external={button.external}>
+              {button.label}
+            </NavLink>
+          </Button>
+        )}
       </div>
     </section>
   )

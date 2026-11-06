@@ -1,5 +1,7 @@
 import type { Block } from 'payload'
 
+import { linkFields } from '@/fields/link'
+
 export const Hero: Block = {
   slug: 'hero',
   labels: { singular: 'Hero (grosser Seitenkopf)', plural: 'Heros' },
@@ -17,6 +19,19 @@ export const Hero: Block = {
       relationTo: 'media',
       label: 'Hintergrundbild',
       admin: { description: 'Optional. Querformat funktioniert am besten.' },
+    },
+    {
+      name: 'hasButton',
+      type: 'checkbox',
+      label: 'Button anzeigen',
+      defaultValue: false,
+    },
+    {
+      name: 'button',
+      type: 'group',
+      label: 'Button',
+      admin: { condition: (_, sibling) => Boolean(sibling?.hasButton) },
+      fields: linkFields,
     },
   ],
 }

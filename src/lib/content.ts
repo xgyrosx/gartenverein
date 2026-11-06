@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { getDraftContext } from '@/lib/draft'
-import type { News, Termine } from '@/payload-types'
+import type { Gartenangebote, News, Termine } from '@/payload-types'
 
 /** News und Termine werden immer mit den Rechten des Besuchers gelesen (nur Veröffentlichtes). */
 export async function getNewsList(limit = 20): Promise<News[]> {
@@ -63,4 +63,19 @@ export async function getPublishedSlugs(collection: 'seiten' | 'news'): Promise<
     select: { slug: true, updatedAt: true },
   })
   return docs.map((d) => ({ slug: d.slug, updatedAt: d.updatedAt }))
+}
+
+export async function getAngebote(type?: Gartenangebote['type'] | null): Promise<Gartenangebote[]> {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'gartenangebote',
+    where: type ? { type: { equals: type } } : undefined,
+    sort: 'title',
+    limit: 100,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
 }
