@@ -1,7 +1,15 @@
+import type { Metadata } from 'next'
+
 import { PageView } from '@/components/PageView'
 import { getPage } from '@/lib/getPage'
+import { buildMetadata } from '@/lib/seo'
 
-export const dynamic = 'force-dynamic'
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage('start')
+  const meta = buildMetadata({ seo: page?.meta })
+  return meta.title ? meta : { ...meta, title: undefined }
+}
+
 
 export default async function HomePage() {
   const page = await getPage('start')

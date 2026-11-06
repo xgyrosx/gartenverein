@@ -2,16 +2,23 @@ import type { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
 import { PageView } from '@/components/PageView'
+import { getPublishedSlugs } from '@/lib/content'
 import { getPage } from '@/lib/getPage'
+import { buildMetadata } from '@/lib/seo'
 
-export const dynamic = 'force-dynamic'
 
 type Args = { params: Promise<{ slug: string }> }
+
+export async function generateStaticParams() {
+  const pages = await getPublishedSlugs('seiten')
+  return pages.filter((p) => p.slug !== 'start').map((p) => ({ slug: p.slug }))
+}
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const page = await getPage(slug)
-  return { title: page ? page.title : 'Seite nicht gefunden' }
+  if (!page) return { title: 'Seite nicht gefunden' }
+  return buildMetadata({ seo: page.meta, fallbackTitle: page.title })
 }
 
 export default async function Page({ params }: Args) {

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate'
 import { isAdmin, loggedIn, publishedOrLoggedIn } from '@/access'
 import { BildText } from '@/blocks/BildText'
 import { Hero } from '@/blocks/Hero'
@@ -14,10 +15,14 @@ export const Seiten: CollectionConfig = {
   labels: { singular: 'Seite', plural: 'Seiten' },
   admin: {
     useAsTitle: 'title',
+    listSearchableFields: ['title', 'slug'],
+    preview: (doc) =>
+      doc?.slug ? `/next/preview?path=${encodeURIComponent(doc.slug === 'start' ? '/' : `/${doc.slug}`)}` : null,
     defaultColumns: ['title', 'slug', '_status', 'updatedAt'],
     group: 'Inhalte',
     description: 'Die Seiten der Website, aufgebaut aus Bausteinen.',
   },
+  hooks: { afterChange: [revalidateAfterChange], afterDelete: [revalidateAfterDelete] },
   access: {
     read: publishedOrLoggedIn,
     create: loggedIn,

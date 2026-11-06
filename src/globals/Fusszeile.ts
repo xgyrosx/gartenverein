@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobalAfterChange } from '@/hooks/revalidate'
 import { loggedIn } from '@/access'
 import { linkFields } from '@/fields/link'
 
@@ -8,6 +9,7 @@ export const Fusszeile: GlobalConfig = {
   label: 'Fusszeile',
   admin: { group: 'Einstellungen', description: 'Der Bereich ganz unten auf jeder Seite.' },
   access: { read: () => true, update: loggedIn },
+  hooks: { afterChange: [revalidateGlobalAfterChange] },
   fields: [
     {
       name: 'text',

@@ -8,14 +8,30 @@ type Layout = NonNullable<Seiten['layout']>
 type RichTextData = Extract<Layout[number], { blockType: 'text' }>['content']
 
 const textNode = (text: string) => ({
-  type: 'text', text, format: 0, detail: 0, mode: 'normal', style: '', version: 1,
+  type: 'text',
+  text,
+  format: 0,
+  detail: 0,
+  mode: 'normal',
+  style: '',
+  version: 1,
 })
 const paragraph = (text: string) => ({
-  type: 'paragraph', format: '', indent: 0, version: 1, direction: 'ltr', textFormat: 0,
+  type: 'paragraph',
+  format: '',
+  indent: 0,
+  version: 1,
+  direction: 'ltr',
+  textFormat: 0,
   children: [textNode(text)],
 })
 const heading = (text: string) => ({
-  type: 'heading', tag: 'h2', format: '', indent: 0, version: 1, direction: 'ltr',
+  type: 'heading',
+  tag: 'h2',
+  format: '',
+  indent: 0,
+  version: 1,
+  direction: 'ltr',
   children: [textNode(text)],
 })
 const richText = (...children: object[]): RichTextData =>
@@ -41,6 +57,7 @@ async function main() {
   const upload = async (name: string, alt: string, colors: [string, string, string]) => {
     const data = await placeholderImage(colors)
     return payload.create({
+      context: { disableRevalidate: true },
       collection: 'media',
       data: { alt },
       file: { data, mimetype: 'image/png', name, size: data.length },
@@ -62,6 +79,7 @@ async function main() {
       ['#a7c957', '#6a994e', '#386641'],
     )
     await payload.create({
+      context: { disableRevalidate: true },
       collection: 'seiten',
       draft: false,
       data: {
@@ -71,7 +89,7 @@ async function main() {
         layout: [
           {
             blockType: 'hero',
-            title: 'Willkommen im Gartenverein Sonnenhalde',
+            title: 'Willkommen im Familiengartenverein Zürich-Affoltern',
             subtitle: 'Gemeinsam gärtnern, ernten und feiern – mitten im Quartier.',
             image: hero.id,
           },
@@ -120,6 +138,7 @@ async function main() {
       ['#b5c99a', '#87a96b', '#4f772d'],
     )
     await payload.create({
+      context: { disableRevalidate: true },
       collection: 'seiten',
       draft: false,
       data: {
@@ -132,7 +151,7 @@ async function main() {
             content: richText(
               heading('Wer wir sind'),
               paragraph(
-                'Der Gartenverein Sonnenhalde besteht seit über 50 Jahren. Heute bewirtschaften rund 40 Mitglieder die Parzellen am Hang oberhalb des Dorfes.',
+                'Der Familiengartenverein Zürich-Affoltern besteht seit über 50 Jahren. Heute bewirtschaften rund 40 Mitglieder die Parzellen am Hang oberhalb des Dorfes.',
               ),
               paragraph(
                 'Der Vorstand organisiert Arbeitseinsätze, Gartenkurse und das jährliche Sommerfest. Alle Aufgaben im Verein werden freiwillig übernommen.',
@@ -170,12 +189,13 @@ async function main() {
   const verein = await payload.findGlobal({ slug: 'vereinsdaten' })
   if (!verein.street) {
     await payload.updateGlobal({
+      context: { disableRevalidate: true },
       slug: 'vereinsdaten',
       data: {
-        name: 'Gartenverein Sonnenhalde',
+        name: 'Familiengartenverein Zürich-Affoltern',
         street: 'Hangstrasse 12',
         zip: '8000',
-        city: 'Musterstadt',
+        city: 'Zürich-Affoltern',
         email: 'info@example.ch',
         phone: '+41 00 000 00 00',
       },
@@ -184,17 +204,23 @@ async function main() {
   }
 
   // Platzhalter-Seiten für alle Hauptpunkte der Navigation
-  const platzhalter = (text: string): Layout => [{ blockType: 'text', content: richText(paragraph(text)) }]
+  const platzhalter = (text: string): Layout => [
+    { blockType: 'text', content: richText(paragraph(text)) },
+  ]
   const placeholders: { slug: string; title: string; layout: Layout }[] = [
     {
       slug: 'garten-pachten',
       title: 'Garten pachten',
-      layout: platzhalter('Hier erfahren Sie bald, wie Sie bei uns einen Garten pachten können. Dieser Bereich wird noch ausgebaut.'),
+      layout: platzhalter(
+        'Hier erfahren Sie bald, wie Sie bei uns einen Garten pachten können. Dieser Bereich wird noch ausgebaut.',
+      ),
     },
     {
       slug: 'verein',
       title: 'Verein',
-      layout: platzhalter('Informationen zum Verein, zum Vorstand und zu den Arealen. Dieser Bereich wird noch ausgebaut.'),
+      layout: platzhalter(
+        'Informationen zum Verein, zum Vorstand und zu den Arealen. Dieser Bereich wird noch ausgebaut.',
+      ),
     },
     {
       slug: 'aktuelles',
@@ -207,12 +233,16 @@ async function main() {
     {
       slug: 'fuer-paechter',
       title: 'Für Pächter:innen',
-      layout: platzhalter('Reglemente, Formulare und praktische Informationen für Pächterinnen und Pächter. Dieser Bereich wird noch ausgebaut.'),
+      layout: platzhalter(
+        'Reglemente, Formulare und praktische Informationen für Pächterinnen und Pächter. Dieser Bereich wird noch ausgebaut.',
+      ),
     },
     {
       slug: 'gartenwissen',
       title: 'Gartenwissen',
-      layout: platzhalter('Tipps und Ratgeber rund um den Garten. Dieser Bereich wird noch ausgebaut.'),
+      layout: platzhalter(
+        'Tipps und Ratgeber rund um den Garten. Dieser Bereich wird noch ausgebaut.',
+      ),
     },
     {
       slug: 'impressum',
@@ -228,6 +258,7 @@ async function main() {
   for (const ph of placeholders) {
     if (await exists(ph.slug)) continue
     await payload.create({
+      context: { disableRevalidate: true },
       collection: 'seiten',
       draft: false,
       data: { title: ph.title, slug: ph.slug, _status: 'published', layout: ph.layout },
@@ -236,18 +267,30 @@ async function main() {
   }
 
   const pageId = async (slug: string) => {
-    const { docs } = await payload.find({ collection: 'seiten', where: { slug: { equals: slug } }, limit: 1 })
+    const { docs } = await payload.find({
+      collection: 'seiten',
+      where: { slug: { equals: slug } },
+      limit: 1,
+    })
     return docs[0]?.id as number
   }
-  const seite = async (label: string, slug: string) => ({ label, linkType: 'seite' as const, page: await pageId(slug) })
+  const seite = async (label: string, slug: string) => ({
+    label,
+    linkType: 'seite' as const,
+    page: await pageId(slug),
+  })
 
   const nav = await payload.findGlobal({ slug: 'navigation' })
   if (!nav.items?.length) {
     await payload.updateGlobal({
+      context: { disableRevalidate: true },
       slug: 'navigation',
       data: {
         items: [
-          { ...(await seite('Verein', 'verein')), children: [await seite('Über uns', 'ueber-uns')] },
+          {
+            ...(await seite('Verein', 'verein')),
+            children: [await seite('Über uns', 'ueber-uns')],
+          },
           {
             ...(await seite('Aktuelles und Termine', 'aktuelles')),
             children: [
@@ -267,19 +310,34 @@ async function main() {
   const banner = await payload.findGlobal({ slug: 'hinweisbanner' })
   if (!banner.text) {
     await payload.updateGlobal({
+      context: { disableRevalidate: true },
       slug: 'hinweisbanner',
-      data: { enabled: false, type: 'info', text: 'Beispiel: Der nächste Arbeitseinsatz findet bei jeder Witterung statt.' },
+      data: {
+        enabled: false,
+        type: 'info',
+        text: 'Beispiel: Der nächste Arbeitseinsatz findet bei jeder Witterung statt.',
+      },
     })
   }
 
   const fuss = await payload.findGlobal({ slug: 'fusszeile' })
   if (!fuss.text) {
     await payload.updateGlobal({
+      context: { disableRevalidate: true },
       slug: 'fusszeile',
       data: {
         text: 'Der Garten ist von März bis Oktober täglich von 8 bis 20 Uhr geöffnet.',
-        legalLinks: [await seite('Impressum', 'impressum'), await seite('Datenschutz', 'datenschutz')],
-        partnerLinks: [{ label: 'Dachverband (Beispiel)', linkType: 'adresse' as const, url: 'https://example.org' }],
+        legalLinks: [
+          await seite('Impressum', 'impressum'),
+          await seite('Datenschutz', 'datenschutz'),
+        ],
+        partnerLinks: [
+          {
+            label: 'Dachverband (Beispiel)',
+            linkType: 'adresse' as const,
+            url: 'https://example.org',
+          },
+        ],
       },
     })
     payload.logger.info('Fusszeile angelegt.')
@@ -294,25 +352,32 @@ async function main() {
   }
 
   if ((await payload.count({ collection: 'news' })).totalDocs === 0) {
-    const bild = await upload('beispiel-news.png', 'Gezeichnete Gartenbeete bei Sonnenschein', ['#a7c957', '#6a994e', '#386641'])
+    const bild = await upload('beispiel-news.png', 'Gezeichnete Gartenbeete bei Sonnenschein', [
+      '#a7c957',
+      '#6a994e',
+      '#386641',
+    ])
     const items = [
       {
         title: 'Sommerfest im Vereinsgarten',
-        teaser: 'Am letzten Augustwochenende feiern wir wieder zusammen. Es gibt Grilladen, Salate aus dem eigenen Garten und Musik.',
+        teaser:
+          'Am letzten Augustwochenende feiern wir wieder zusammen. Es gibt Grilladen, Salate aus dem eigenen Garten und Musik.',
         text: 'Das Sommerfest findet bei jedem Wetter statt. Bitte bringen Sie einen Salat oder ein Dessert mit. Getränke und Grillgut organisiert der Verein.',
         days: -3,
         withImage: true,
       },
       {
         title: 'Neue Kompostplätze eingerichtet',
-        teaser: 'Dank vieler fleissiger Hände stehen jetzt drei zusätzliche Kompostplätze am unteren Ende des Areals bereit.',
+        teaser:
+          'Dank vieler fleissiger Hände stehen jetzt drei zusätzliche Kompostplätze am unteren Ende des Areals bereit.',
         text: 'Bitte trennen Sie Gartenabfälle sorgfältig: Rasenschnitt und Laub gehören auf getrennte Plätze. Eine Beschriftung hilft bei der Orientierung.',
         days: -14,
         withImage: false,
       },
       {
         title: 'Rückblick auf den Arbeitseinsatz im Frühling',
-        teaser: 'Über 25 Mitglieder haben beim Frühlingseinsatz Wege gejätet, Beete vorbereitet und das Gewächshaus repariert.',
+        teaser:
+          'Über 25 Mitglieder haben beim Frühlingseinsatz Wege gejätet, Beete vorbereitet und das Gewächshaus repariert.',
         text: 'Herzlichen Dank allen, die mitangepackt haben. Der nächste Arbeitseinsatz findet im Herbst statt, das Datum finden Sie bei den Terminen.',
         days: -35,
         withImage: true,
@@ -320,6 +385,7 @@ async function main() {
     ]
     for (const n of items) {
       await payload.create({
+      context: { disableRevalidate: true },
         collection: 'news',
         draft: false,
         data: {
@@ -338,13 +404,32 @@ async function main() {
 
   if ((await payload.count({ collection: 'termine' })).totalDocs === 0) {
     const termine = [
-      { title: 'Arbeitseinsatz im Herbst', days: 9, hour: 7, location: 'Vereinsgarten', text: 'Wir räumen Beete ab, schneiden Sträucher und bereiten den Winter vor. Bitte Arbeitshandschuhe mitbringen. Zum Abschluss gibt es eine Suppe.' },
-      { title: 'Gartenkurs: Obstbäume schneiden', days: 16, hour: 8, location: 'Vereinshaus', text: 'Ein erfahrenes Mitglied zeigt, wie Obstbäume richtig geschnitten werden. Anmeldung nicht nötig.' },
+      {
+        title: 'Arbeitseinsatz im Herbst',
+        days: 9,
+        hour: 7,
+        location: 'Vereinsgarten',
+        text: 'Wir räumen Beete ab, schneiden Sträucher und bereiten den Winter vor. Bitte Arbeitshandschuhe mitbringen. Zum Abschluss gibt es eine Suppe.',
+      },
+      {
+        title: 'Gartenkurs: Obstbäume schneiden',
+        days: 16,
+        hour: 8,
+        location: 'Vereinshaus',
+        text: 'Ein erfahrenes Mitglied zeigt, wie Obstbäume richtig geschnitten werden. Anmeldung nicht nötig.',
+      },
       { title: 'Vorstandssitzung', days: 23, hour: 17, location: 'Vereinshaus', text: '' },
-      { title: 'Generalversammlung', days: 60, hour: 18, location: 'Vereinshaus', text: 'Die Einladung mit der Traktandenliste erhalten alle Mitglieder per Post.' },
+      {
+        title: 'Generalversammlung',
+        days: 60,
+        hour: 18,
+        location: 'Vereinshaus',
+        text: 'Die Einladung mit der Traktandenliste erhalten alle Mitglieder per Post.',
+      },
     ]
     for (const t of termine) {
       await payload.create({
+      context: { disableRevalidate: true },
         collection: 'termine',
         draft: false,
         data: {

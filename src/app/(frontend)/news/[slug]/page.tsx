@@ -4,17 +4,23 @@ import { notFound } from 'next/navigation'
 
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
-import { getNews } from '@/lib/content'
+import { getNews, getPublishedSlugs } from '@/lib/content'
 import { formatDate } from '@/lib/format'
+import { buildMetadata } from '@/lib/seo'
 
-export const dynamic = 'force-dynamic'
 
 type Args = { params: Promise<{ slug: string }> }
+
+export async function generateStaticParams() {
+  const news = await getPublishedSlugs('news')
+  return news.map((n) => ({ slug: n.slug }))
+}
 
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const news = await getNews(slug)
-  return { title: news?.title ?? 'News nicht gefunden', description: news?.teaser }
+  if (!news) return { title: 'News nicht gefunden' }
+  return buildMetadata({ seo: news.meta, fallbackTitle: news.title, fallbackDescription: news.teaser, fallbackImage: news.image })
 }
 
 export default async function NewsDetail({ params }: Args) {

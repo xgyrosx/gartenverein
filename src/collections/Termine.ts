@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate'
 import { loggedIn, publishedOrLoggedIn } from '@/access'
 
 export const Termine: CollectionConfig = {
@@ -7,10 +8,12 @@ export const Termine: CollectionConfig = {
   labels: { singular: 'Termin', plural: 'Termine' },
   admin: {
     useAsTitle: 'title',
+    listSearchableFields: ['title', 'location'],
     defaultColumns: ['title', 'startDate', 'location', '_status'],
     group: 'Inhalte',
     description: 'Veranstaltungen und Arbeitseinsätze. Auf der Website erscheinen nur kommende Termine.',
   },
+  hooks: { afterChange: [revalidateAfterChange], afterDelete: [revalidateAfterDelete] },
   access: {
     read: publishedOrLoggedIn,
     create: loggedIn,

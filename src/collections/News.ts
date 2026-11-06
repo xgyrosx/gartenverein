@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate'
 import { loggedIn, publishedOrLoggedIn } from '@/access'
 import { slugField } from '@/fields/slug'
 
@@ -8,10 +9,13 @@ export const News: CollectionConfig = {
   labels: { singular: 'News-Beitrag', plural: 'News' },
   admin: {
     useAsTitle: 'title',
+    listSearchableFields: ['title', 'slug'],
+    preview: (doc) => (doc?.slug ? `/next/preview?path=${encodeURIComponent(`/news/${doc.slug}`)}` : null),
     defaultColumns: ['title', 'publishedAt', '_status', 'updatedAt'],
     group: 'Inhalte',
     description: 'Neuigkeiten aus dem Verein.',
   },
+  hooks: { afterChange: [revalidateAfterChange], afterDelete: [revalidateAfterDelete] },
   access: {
     read: publishedOrLoggedIn,
     create: loggedIn,

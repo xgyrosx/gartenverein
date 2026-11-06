@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobalAfterChange } from '@/hooks/revalidate'
 import { loggedIn } from '@/access'
 
 export const Vereinsdaten: GlobalConfig = {
@@ -7,6 +8,7 @@ export const Vereinsdaten: GlobalConfig = {
   label: 'Vereinsdaten',
   admin: { group: 'Einstellungen', description: 'Name, Adresse und Kontakt des Vereins. Wird in Kopf- und Fusszeile angezeigt.' },
   access: { read: () => true, update: loggedIn },
+  hooks: { afterChange: [revalidateGlobalAfterChange] },
   fields: [
     { name: 'name', type: 'text', label: 'Name des Vereins', required: true, defaultValue: 'Gartenverein' },
     {

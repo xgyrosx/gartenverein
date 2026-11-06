@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { NewsCard } from '@/components/NewsCard'
 import { getNewsList } from '@/lib/content'
 
-export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'News' }
 
 export default async function NewsPage() {

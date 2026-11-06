@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate'
 import { loggedIn } from '@/access'
 
 export const Media: CollectionConfig = {
@@ -7,10 +8,12 @@ export const Media: CollectionConfig = {
   labels: { singular: 'Bild', plural: 'Bilder' },
   admin: {
     useAsTitle: 'alt',
+    listSearchableFields: ['alt', 'filename'],
     defaultColumns: ['filename', 'alt', 'updatedAt'],
     group: 'Inhalte',
     description: 'Hochgeladene Bilder. Zu jedem Bild gehört ein Alt-Text.',
   },
+  hooks: { afterChange: [revalidateAfterChange], afterDelete: [revalidateAfterDelete] },
   access: {
     read: () => true,
     create: loggedIn,

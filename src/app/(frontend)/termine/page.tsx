@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { TerminListe } from '@/components/TerminListe'
 import { getUpcomingTermine } from '@/lib/content'
 
-export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Termine' }
 
 export default async function TerminePage() {

@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobalAfterChange } from '@/hooks/revalidate'
 import { loggedIn } from '@/access'
 import { linkFields } from '@/fields/link'
 
@@ -11,6 +12,7 @@ export const Navigation: GlobalConfig = {
     description: 'Das Menü oben auf jeder Seite: bis zu 6 Hauptpunkte, je mit optionalen Unterpunkten.',
   },
   access: { read: () => true, update: loggedIn },
+  hooks: { afterChange: [revalidateGlobalAfterChange] },
   fields: [
     {
       name: 'items',

@@ -1,5 +1,6 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { de } from '@payloadcms/translations/languages/de'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -22,6 +23,7 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    meta: { titleSuffix: ' – Verwaltung' },
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -38,10 +40,20 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteAdapter({
+    // Prototyp: Das Datenbankschema wird automatisch angelegt/angepasst (auch beim Build).
+    // Vor dem Go-Live auf Migrationen umstellen (siehe docs/entwicklung.md).
+    push: true,
     client: {
       url: process.env.DATABASE_URL || '',
     },
   }),
   sharp,
-  plugins: [],
+  plugins: [
+    seoPlugin({
+      collections: ['seiten', 'news'],
+      uploadsCollection: 'media',
+      generateTitle: ({ doc }) => (doc as { title?: string }).title ?? '',
+      generateDescription: ({ doc }) => (doc as { teaser?: string }).teaser ?? '',
+    }),
+  ],
 })

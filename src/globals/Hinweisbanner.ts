@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateGlobalAfterChange } from '@/hooks/revalidate'
 import { loggedIn } from '@/access'
 import { linkFields } from '@/fields/link'
 
@@ -11,6 +12,7 @@ export const Hinweisbanner: GlobalConfig = {
     description: 'Ein auffälliger Hinweis ganz oben auf jeder Seite, z. B. bei Änderungen oder Störungen.',
   },
   access: { read: () => true, update: loggedIn },
+  hooks: { afterChange: [revalidateGlobalAfterChange] },
   fields: [
     {
       name: 'enabled',
