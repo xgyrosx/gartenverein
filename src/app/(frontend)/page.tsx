@@ -1,14 +1,27 @@
-export default function HomePage() {
-  return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="text-3xl font-bold text-green-800">Gartenverein</h1>
-      <p className="mt-4 text-lg leading-relaxed">
-        Die Website ist im Aufbau. Die Verwaltung der Inhalte finden Sie unter{' '}
-        <a className="text-green-800 underline hover:text-green-900" href="/admin">
-          /admin
-        </a>
-        .
-      </p>
-    </div>
-  )
+import type { Metadata } from 'next'
+
+import { PageView } from '@/components/PageView'
+import { getPage } from '@/lib/getPage'
+
+export const dynamic = 'force-dynamic'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getPage('start')
+  return { title: page?.title ?? 'Gartenverein' }
+}
+
+export default async function HomePage() {
+  const page = await getPage('start')
+  if (!page) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-16">
+        <h1 className="text-3xl font-bold text-green-900">Gartenverein</h1>
+        <p className="mt-4 text-lg">
+          Die Startseite ist noch nicht angelegt. Im Verwaltungsbereich unter «Seiten» eine Seite mit
+          der Adresse «start» erstellen und veröffentlichen.
+        </p>
+      </div>
+    )
+  }
+  return <PageView page={page} />
 }
