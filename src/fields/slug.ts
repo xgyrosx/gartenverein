@@ -2,7 +2,7 @@ import type { FieldHook, TextField } from 'payload'
 
 import { slugify } from '@/lib/slugify'
 
-const RESERVED = ['admin', 'api', 'next']
+const RESERVED = ['admin', 'api', 'next', 'news', 'termine']
 
 const slugFromTitle: FieldHook = ({ value, data }) => {
   const source = typeof value === 'string' && value.trim() ? value : data?.title

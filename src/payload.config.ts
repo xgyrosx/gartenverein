@@ -8,7 +8,9 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { News } from './collections/News'
 import { Seiten } from './collections/Seiten'
+import { Termine } from './collections/Termine'
 import { Fusszeile } from './globals/Fusszeile'
 import { Kopfzeile } from './globals/Kopfzeile'
 import { Vereinsdaten } from './globals/Vereinsdaten'
@@ -23,7 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Seiten, Media, Users],
+  collections: [Seiten, News, Termine, Media, Users],
   globals: [Kopfzeile, Fusszeile, Vereinsdaten],
   editor: lexicalEditor(),
   i18n: {

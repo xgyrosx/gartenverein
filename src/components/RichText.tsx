@@ -13,6 +13,9 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
     const slug = String(value.slug)
     return slug === 'start' ? '/' : `/${slug}`
   }
+  if (relationTo === 'news' && typeof value === 'object' && value && 'slug' in value) {
+    return `/news/${String(value.slug)}`
+  }
   return '/'
 }
 

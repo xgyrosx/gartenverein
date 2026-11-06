@@ -4,6 +4,8 @@ import { isAdmin, loggedIn, publishedOrLoggedIn } from '@/access'
 import { BildText } from '@/blocks/BildText'
 import { Hero } from '@/blocks/Hero'
 import { Hinweisbox } from '@/blocks/Hinweisbox'
+import { NaechsteTermine } from '@/blocks/NaechsteTermine'
+import { NeueNews } from '@/blocks/NeueNews'
 import { Text } from '@/blocks/Text'
 import { slugField } from '@/fields/slug'
 
@@ -32,7 +34,7 @@ export const Seiten: CollectionConfig = {
       name: 'layout',
       type: 'blocks',
       label: 'Inhalt',
-      blocks: [Hero, Text, BildText, Hinweisbox],
+      blocks: [Hero, Text, BildText, Hinweisbox, NeueNews, NaechsteTermine],
       admin: { description: 'Bausteine hinzufügen und mit dem Ziehgriff in die richtige Reihenfolge bringen.' },
     },
   ],

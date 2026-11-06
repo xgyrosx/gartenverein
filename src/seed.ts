@@ -105,6 +105,8 @@ async function main() {
               ),
             ),
           },
+          { blockType: 'neueNews', title: 'Neueste News', count: 3 },
+          { blockType: 'naechsteTermine', title: 'Nächste Termine', count: 3 },
           {
             blockType: 'hinweisbox',
             variant: 'hinweis',
@@ -216,6 +218,80 @@ async function main() {
       data: { text: 'Der Garten ist von März bis Oktober täglich von 8 bis 20 Uhr geöffnet.' },
     })
     payload.logger.info('Fusszeile angelegt.')
+  }
+
+  // News und Termine
+  const day = 24 * 60 * 60 * 1000
+  const inDays = (d: number, hour = 12) => {
+    const t = new Date(Date.now() + d * day)
+    t.setUTCHours(hour, 0, 0, 0)
+    return t.toISOString()
+  }
+
+  if ((await payload.count({ collection: 'news' })).totalDocs === 0) {
+    const bild = await upload('beispiel-news.png', 'Gezeichnete Gartenbeete bei Sonnenschein', ['#a7c957', '#6a994e', '#386641'])
+    const items = [
+      {
+        title: 'Sommerfest im Vereinsgarten',
+        teaser: 'Am letzten Augustwochenende feiern wir wieder zusammen. Es gibt Grilladen, Salate aus dem eigenen Garten und Musik.',
+        text: 'Das Sommerfest findet bei jedem Wetter statt. Bitte bringen Sie einen Salat oder ein Dessert mit. Getränke und Grillgut organisiert der Verein.',
+        days: -3,
+        withImage: true,
+      },
+      {
+        title: 'Neue Kompostplätze eingerichtet',
+        teaser: 'Dank vieler fleissiger Hände stehen jetzt drei zusätzliche Kompostplätze am unteren Ende des Areals bereit.',
+        text: 'Bitte trennen Sie Gartenabfälle sorgfältig: Rasenschnitt und Laub gehören auf getrennte Plätze. Eine Beschriftung hilft bei der Orientierung.',
+        days: -14,
+        withImage: false,
+      },
+      {
+        title: 'Rückblick auf den Arbeitseinsatz im Frühling',
+        teaser: 'Über 25 Mitglieder haben beim Frühlingseinsatz Wege gejätet, Beete vorbereitet und das Gewächshaus repariert.',
+        text: 'Herzlichen Dank allen, die mitangepackt haben. Der nächste Arbeitseinsatz findet im Herbst statt, das Datum finden Sie bei den Terminen.',
+        days: -35,
+        withImage: true,
+      },
+    ]
+    for (const n of items) {
+      await payload.create({
+        collection: 'news',
+        draft: false,
+        data: {
+          title: n.title,
+          slug: undefined as unknown as string,
+          teaser: n.teaser,
+          publishedAt: inDays(n.days),
+          image: n.withImage ? bild.id : undefined,
+          content: richText(paragraph(n.teaser), paragraph(n.text)),
+          _status: 'published',
+        },
+      })
+    }
+    payload.logger.info('News angelegt.')
+  }
+
+  if ((await payload.count({ collection: 'termine' })).totalDocs === 0) {
+    const termine = [
+      { title: 'Arbeitseinsatz im Herbst', days: 9, hour: 7, location: 'Vereinsgarten', text: 'Wir räumen Beete ab, schneiden Sträucher und bereiten den Winter vor. Bitte Arbeitshandschuhe mitbringen. Zum Abschluss gibt es eine Suppe.' },
+      { title: 'Gartenkurs: Obstbäume schneiden', days: 16, hour: 8, location: 'Vereinshaus', text: 'Ein erfahrenes Mitglied zeigt, wie Obstbäume richtig geschnitten werden. Anmeldung nicht nötig.' },
+      { title: 'Vorstandssitzung', days: 23, hour: 17, location: 'Vereinshaus', text: '' },
+      { title: 'Generalversammlung', days: 60, hour: 18, location: 'Vereinshaus', text: 'Die Einladung mit der Traktandenliste erhalten alle Mitglieder per Post.' },
+    ]
+    for (const t of termine) {
+      await payload.create({
+        collection: 'termine',
+        draft: false,
+        data: {
+          title: t.title,
+          startDate: inDays(t.days, t.hour),
+          location: t.location,
+          description: t.text ? richText(paragraph(t.text)) : undefined,
+          _status: 'published',
+        },
+      })
+    }
+    payload.logger.info('Termine angelegt.')
   }
 
   payload.logger.info('Seed abgeschlossen.')

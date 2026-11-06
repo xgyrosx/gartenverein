@@ -68,6 +68,8 @@ export interface Config {
   blocks: {};
   collections: {
     seiten: Seiten;
+    news: News;
+    termine: Termine;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -78,6 +80,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     seiten: SeitenSelect<false> | SeitenSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
+    termine: TermineSelect<false> | TermineSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -235,6 +239,26 @@ export interface Seiten {
             blockName?: string | null;
             blockType: 'hinweisbox';
           }
+        | {
+            title?: string | null;
+            /**
+             * Wie viele Beiträge angezeigt werden (1–12).
+             */
+            count: number;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'neueNews';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Wie viele Termine angezeigt werden (1–12).
+             */
+            count: number;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'naechsteTermine';
+          }
       )[]
     | null;
   updatedAt: string;
@@ -290,6 +314,89 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * Neuigkeiten aus dem Verein.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  /**
+   * Teil der Internetadresse, z. B. «sommerfest» ergibt /news/sommerfest. Wird aus dem Titel erzeugt, wenn leer.
+   */
+  slug: string;
+  /**
+   * Datum, das bei der Meldung angezeigt wird. News werden nach diesem Datum sortiert.
+   */
+  publishedAt: string;
+  /**
+   * Ein bis zwei Sätze für die Übersicht (max. 300 Zeichen).
+   */
+  teaser: string;
+  /**
+   * Optional.
+   */
+  image?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Veranstaltungen und Arbeitseinsätze. Auf der Website erscheinen nur kommende Termine.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "termine".
+ */
+export interface Termine {
+  id: number;
+  title: string;
+  /**
+   * Beginn des Termins.
+   */
+  startDate: string;
+  /**
+   * Z. B. «Vereinshaus» oder «Parzelle 12».
+   */
+  location?: string | null;
+  /**
+   * Optional. Was passiert, was mitbringen?
+   */
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Personen, die sich im Verwaltungsbereich anmelden dürfen.
@@ -350,6 +457,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'seiten';
         value: number | Seiten;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
+      } | null)
+    | ({
+        relationTo: 'termine';
+        value: number | Termine;
       } | null)
     | ({
         relationTo: 'media';
@@ -445,7 +560,51 @@ export interface SeitenSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        neueNews?:
+          | T
+          | {
+              title?: T;
+              count?: T;
+              id?: T;
+              blockName?: T;
+            };
+        naechsteTermine?:
+          | T
+          | {
+              title?: T;
+              count?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  publishedAt?: T;
+  teaser?: T;
+  image?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "termine_select".
+ */
+export interface TermineSelect<T extends boolean = true> {
+  title?: T;
+  startDate?: T;
+  location?: T;
+  description?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

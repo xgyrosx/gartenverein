@@ -1,6 +1,8 @@
 import { BildTextBlock } from '@/components/blocks/BildTextBlock'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { HinweisboxBlock } from '@/components/blocks/HinweisboxBlock'
+import { NaechsteTermineBlock } from '@/components/blocks/NaechsteTermineBlock'
+import { NeueNewsBlock } from '@/components/blocks/NeueNewsBlock'
 import { TextBlock } from '@/components/blocks/TextBlock'
 import type { Seiten } from '@/payload-types'
 
@@ -18,6 +20,10 @@ export function RenderBlocks({ blocks }: { blocks: NonNullable<Seiten['layout']>
             return <BildTextBlock key={key} block={block} />
           case 'hinweisbox':
             return <HinweisboxBlock key={key} block={block} />
+          case 'neueNews':
+            return <NeueNewsBlock key={key} block={block} />
+          case 'naechsteTermine':
+            return <NaechsteTermineBlock key={key} block={block} />
           default:
             return null
         }
