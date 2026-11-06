@@ -89,8 +89,16 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    kopfzeile: Kopfzeile;
+    fusszeile: Fusszeile;
+    vereinsdaten: Vereinsdaten;
+  };
+  globalsSelect: {
+    kopfzeile: KopfzeileSelect<false> | KopfzeileSelect<true>;
+    fusszeile: FusszeileSelect<false> | FusszeileSelect<true>;
+    vereinsdaten: VereinsdatenSelect<false> | VereinsdatenSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -557,6 +565,136 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Das Menü oben auf jeder Seite.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "kopfzeile".
+ */
+export interface Kopfzeile {
+  id: number;
+  /**
+   * Reihenfolge per Ziehgriff ändern. Nicht veröffentlichte Seiten erscheinen nicht im Menü.
+   */
+  items?:
+    | {
+        label: string;
+        linkType: 'seite' | 'adresse';
+        page?: (number | null) | Seiten;
+        /**
+         * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Der Bereich ganz unten auf jeder Seite.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fusszeile".
+ */
+export interface Fusszeile {
+  id: number;
+  /**
+   * Optional. Ein kurzer Satz, z. B. zu den Öffnungszeiten.
+   */
+  text?: string | null;
+  links?:
+    | {
+        label: string;
+        linkType: 'seite' | 'adresse';
+        page?: (number | null) | Seiten;
+        /**
+         * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Name, Adresse und Kontakt des Vereins. Wird in Kopf- und Fusszeile angezeigt.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vereinsdaten".
+ */
+export interface Vereinsdaten {
+  id: number;
+  name: string;
+  /**
+   * Optional. Wird links in der Kopfzeile angezeigt.
+   */
+  logo?: (number | null) | Media;
+  street?: string | null;
+  zip?: string | null;
+  city?: string | null;
+  email?: string | null;
+  /**
+   * Z. B. +41 79 123 45 67
+   */
+  phone?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "kopfzeile_select".
+ */
+export interface KopfzeileSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fusszeile_select".
+ */
+export interface FusszeileSelect<T extends boolean = true> {
+  text?: T;
+  links?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vereinsdaten_select".
+ */
+export interface VereinsdatenSelect<T extends boolean = true> {
+  name?: T;
+  logo?: T;
+  street?: T;
+  zip?: T;
+  city?: T;
+  email?: T;
+  phone?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

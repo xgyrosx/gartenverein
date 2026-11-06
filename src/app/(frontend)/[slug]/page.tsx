@@ -11,7 +11,7 @@ type Args = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const page = await getPage(slug)
-  return { title: page ? `${page.title} – Gartenverein` : 'Seite nicht gefunden' }
+  return { title: page ? page.title : 'Seite nicht gefunden' }
 }
 
 export default async function Page({ params }: Args) {

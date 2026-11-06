@@ -4,7 +4,7 @@ import type { Seiten } from '@/payload-types'
 type Block = Extract<NonNullable<Seiten['layout']>[number], { blockType: 'hinweisbox' }>
 
 const styles: Record<Block['variant'], string> = {
-  info: 'border-green-700 bg-green-50 text-green-950',
+  info: 'border-brand-700 bg-brand-50 text-brand-950',
   hinweis: 'border-amber-600 bg-amber-50 text-amber-950',
   wichtig: 'border-red-700 bg-red-50 text-red-950',
 }

@@ -35,11 +35,21 @@ async function placeholderImage(colors: [string, string, string]) {
   return sharp(Buffer.from(svg)).png().toBuffer()
 }
 
+/** Einfaches Platzhalter-Logo: Kreis mit Blatt. */
+async function placeholderLogo(colors: [string, string, string]) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+    <circle cx="150" cy="150" r="140" fill="${colors[0]}"/>
+    <path d="M90 200 Q80 100 190 90 Q220 180 120 215Z" fill="${colors[2]}"/>
+    <path d="M95 205 Q140 150 185 100" stroke="${colors[0]}" stroke-width="6" fill="none"/>
+  </svg>`
+  return sharp(Buffer.from(svg)).png().toBuffer()
+}
+
 async function main() {
   const payload = await getPayload({ config })
 
-  const upload = async (name: string, alt: string, colors: [string, string, string]) => {
-    const data = await placeholderImage(colors)
+  const upload = async (name: string, alt: string, colors: [string, string, string], kind: 'landschaft' | 'logo' = 'landschaft') => {
+    const data = kind === 'logo' ? await placeholderLogo(colors) : await placeholderImage(colors)
     return payload.create({
       collection: 'media',
       data: { alt },
@@ -162,6 +172,50 @@ async function main() {
       },
     })
     payload.logger.info('Seite «ueber-uns» angelegt.')
+  }
+
+  // Globals: nur befüllen, wenn noch leer.
+  const verein = await payload.findGlobal({ slug: 'vereinsdaten' })
+  if (!verein.street) {
+    const logo = await upload('beispiel-logo.png', 'Logo: grünes Blatt in einem Kreis', ['#2c5a28', '#478c3b', '#98c789'], 'logo')
+    await payload.updateGlobal({
+      slug: 'vereinsdaten',
+      data: {
+        name: 'Gartenverein Sonnenhalde',
+        logo: logo.id,
+        street: 'Hangstrasse 12',
+        zip: '8000',
+        city: 'Musterstadt',
+        email: 'info@example.ch',
+        phone: '+41 00 000 00 00',
+      },
+    })
+    payload.logger.info('Vereinsdaten angelegt.')
+  }
+
+  const kopf = await payload.findGlobal({ slug: 'kopfzeile' })
+  if (!kopf.items?.length) {
+    const { docs } = await payload.find({ collection: 'seiten', where: { slug: { equals: 'ueber-uns' } }, limit: 1 })
+    await payload.updateGlobal({
+      slug: 'kopfzeile',
+      data: {
+        items: [
+          ...(docs[0] ? [{ label: 'Über uns', linkType: 'seite' as const, page: docs[0].id }] : []),
+          { label: 'News', linkType: 'adresse' as const, url: '/news' },
+          { label: 'Termine', linkType: 'adresse' as const, url: '/termine' },
+        ],
+      },
+    })
+    payload.logger.info('Kopfzeile angelegt.')
+  }
+
+  const fuss = await payload.findGlobal({ slug: 'fusszeile' })
+  if (!fuss.text) {
+    await payload.updateGlobal({
+      slug: 'fusszeile',
+      data: { text: 'Der Garten ist von März bis Oktober täglich von 8 bis 20 Uhr geöffnet.' },
+    })
+    payload.logger.info('Fusszeile angelegt.')
   }
 
   payload.logger.info('Seed abgeschlossen.')

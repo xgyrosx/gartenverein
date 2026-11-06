@@ -8,12 +8,18 @@ type Props = {
   sizes?: string
   priority?: boolean
   fill?: boolean
+  /** Vorgefertigte Bildgrösse (statt Original). */
+  size?: 'thumbnail' | 'karte' | 'gross'
 }
 
 /** Zeigt ein Bild aus der Media-Collection mit Alt-Text. */
-export function Img({ media, className, sizes, priority, fill }: Props) {
+export function Img({ media, className, sizes, priority, fill, size }: Props) {
   if (!media || typeof media !== 'object' || !media.url) return null
-  const common = { alt: media.alt, className, sizes, priority, src: media.url }
+  const variant = size ? media.sizes?.[size] : undefined
+  const src = variant?.url ?? media.url
+  const width = variant?.width ?? media.width ?? 1200
+  const height = variant?.height ?? media.height ?? 800
+  const common = { alt: media.alt, className, sizes, priority, src }
   if (fill) return <Image {...common} fill />
-  return <Image {...common} width={media.width ?? 1200} height={media.height ?? 800} />
+  return <Image {...common} width={width} height={height} />
 }

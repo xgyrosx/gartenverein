@@ -1,18 +1,11 @@
-import type { CollectionConfig, FieldHook } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 import { isAdmin, loggedIn, publishedOrLoggedIn } from '@/access'
 import { BildText } from '@/blocks/BildText'
 import { Hero } from '@/blocks/Hero'
 import { Hinweisbox } from '@/blocks/Hinweisbox'
 import { Text } from '@/blocks/Text'
-import { slugify } from '@/lib/slugify'
-
-const RESERVED = ['admin', 'api', 'next']
-
-const slugFromTitle: FieldHook = ({ value, data }) => {
-  const source = typeof value === 'string' && value.trim() ? value : data?.title
-  return typeof source === 'string' ? slugify(source) : value
-}
+import { slugField } from '@/fields/slug'
 
 export const Seiten: CollectionConfig = {
   slug: 'seiten',
@@ -32,27 +25,9 @@ export const Seiten: CollectionConfig = {
   versions: { drafts: true, maxPerDoc: 20 },
   fields: [
     { name: 'title', type: 'text', label: 'Titel', required: true },
-    {
-      name: 'slug',
-      type: 'text',
-      label: 'Adresse (Slug)',
-      required: true,
-      unique: true,
-      index: true,
-      hooks: { beforeValidate: [slugFromTitle] },
-      validate: (value: string | null | undefined) => {
-        if (!value) return 'Bitte eine Adresse angeben.'
-        if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value))
-          return 'Nur Kleinbuchstaben, Zahlen und Bindestriche erlaubt.'
-        if (RESERVED.includes(value)) return 'Diese Adresse ist reserviert.'
-        return true
-      },
-      admin: {
-        position: 'sidebar',
-        description:
-          'Teil der Internetadresse, z. B. «ueber-uns» ergibt /ueber-uns. Wird aus dem Titel erzeugt, wenn leer. Die Startseite hat die Adresse «start».',
-      },
-    },
+    slugField(
+      'Teil der Internetadresse, z. B. «ueber-uns» ergibt /ueber-uns. Wird aus dem Titel erzeugt, wenn leer. Die Startseite hat die Adresse «start».',
+    ),
     {
       name: 'layout',
       type: 'blocks',
