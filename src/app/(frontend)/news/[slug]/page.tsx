@@ -22,7 +22,7 @@ export default async function NewsDetail({ params }: Args) {
   const news = await getNews(slug)
   if (!news) notFound()
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12">
+    <article className="mx-auto max-w-content px-4 py-12">
       <p>
         <Link className="text-brand-800 underline hover:text-brand-950" href="/news">
           ← Alle News

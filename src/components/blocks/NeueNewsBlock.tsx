@@ -10,7 +10,7 @@ export async function NeueNewsBlock({ block }: { block: Block }) {
   const news = await getNewsList(block.count)
   if (news.length === 0) return null
   return (
-    <section className="mx-auto max-w-5xl px-4 py-8">
+    <section className="mx-auto max-w-page px-4 py-8">
       <h2 className="text-2xl font-bold text-brand-900">{block.title || 'Neueste News'}</h2>
       <div className="mt-4 grid gap-6 md:grid-cols-3">
         {news.map((n) => (

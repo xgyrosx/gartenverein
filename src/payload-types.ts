@@ -94,12 +94,14 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
-    kopfzeile: Kopfzeile;
+    navigation: Navigation;
+    hinweisbanner: Hinweisbanner;
     fusszeile: Fusszeile;
     vereinsdaten: Vereinsdaten;
   };
   globalsSelect: {
-    kopfzeile: KopfzeileSelect<false> | KopfzeileSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+    hinweisbanner: HinweisbannerSelect<false> | HinweisbannerSelect<true>;
     fusszeile: FusszeileSelect<false> | FusszeileSelect<true>;
     vereinsdaten: VereinsdatenSelect<false> | VereinsdatenSelect<true>;
   };
@@ -726,15 +728,15 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Das Menü oben auf jeder Seite.
+ * Das Menü oben auf jeder Seite: bis zu 6 Hauptpunkte, je mit optionalen Unterpunkten.
  *
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "kopfzeile".
+ * via the `definition` "navigation".
  */
-export interface Kopfzeile {
+export interface Navigation {
   id: number;
   /**
-   * Reihenfolge per Ziehgriff ändern. Nicht veröffentlichte Seiten erscheinen nicht im Menü.
+   * Maximal 6 Hauptpunkte. Reihenfolge per Ziehgriff ändern. Nicht veröffentlichte Seiten erscheinen nicht im Menü.
    */
   items?:
     | {
@@ -745,9 +747,67 @@ export interface Kopfzeile {
          * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
          */
         url?: string | null;
+        /**
+         * Für den wichtigsten Punkt, z. B. «Garten pachten». Nur einer möglich. Ein hervorgehobener Punkt hat keine Unterpunkte.
+         */
+        highlight?: boolean | null;
+        /**
+         * Optional. Es gibt nur eine Ebene von Unterpunkten.
+         */
+        children?:
+          | {
+              label: string;
+              linkType: 'seite' | 'adresse';
+              page?: (number | null) | Seiten;
+              /**
+               * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+               */
+              url?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Ein auffälliger Hinweis ganz oben auf jeder Seite, z. B. bei Änderungen oder Störungen.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hinweisbanner".
+ */
+export interface Hinweisbanner {
+  id: number;
+  /**
+   * Schalter zum schnellen Ein- und Ausschalten.
+   */
+  enabled?: boolean | null;
+  type: 'info' | 'warnung';
+  /**
+   * Kurz halten (max. 200 Zeichen).
+   */
+  text?: string | null;
+  /**
+   * Optional.
+   */
+  visibleFrom?: string | null;
+  /**
+   * Optional.
+   */
+  visibleUntil?: string | null;
+  hasLink?: boolean | null;
+  link?: {
+    label: string;
+    linkType: 'seite' | 'adresse';
+    page?: (number | null) | Seiten;
+    /**
+     * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+     */
+    url?: string | null;
+    id?: string | null;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -763,7 +823,25 @@ export interface Fusszeile {
    * Optional. Ein kurzer Satz, z. B. zu den Öffnungszeiten.
    */
   text?: string | null;
-  links?:
+  /**
+   * Z. B. Impressum und Datenschutz.
+   */
+  legalLinks?:
+    | {
+        label: string;
+        linkType: 'seite' | 'adresse';
+        page?: (number | null) | Seiten;
+        /**
+         * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Links zu Partnerorganisationen, z. B. dem Dachverband.
+   */
+  partnerLinks?:
     | {
         label: string;
         linkType: 'seite' | 'adresse';
@@ -788,7 +866,7 @@ export interface Vereinsdaten {
   id: number;
   name: string;
   /**
-   * Optional. Wird links in der Kopfzeile angezeigt.
+   * Optional. Solange kein Logo hochgeladen ist, zeigt die Website ein Platzhalter-Symbol.
    */
   logo?: (number | null) | Media;
   street?: string | null;
@@ -804,10 +882,44 @@ export interface Vereinsdaten {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "kopfzeile_select".
+ * via the `definition` "navigation_select".
  */
-export interface KopfzeileSelect<T extends boolean = true> {
+export interface NavigationSelect<T extends boolean = true> {
   items?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        highlight?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              linkType?: T;
+              page?: T;
+              url?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hinweisbanner_select".
+ */
+export interface HinweisbannerSelect<T extends boolean = true> {
+  enabled?: T;
+  type?: T;
+  text?: T;
+  visibleFrom?: T;
+  visibleUntil?: T;
+  hasLink?: T;
+  link?:
     | T
     | {
         label?: T;
@@ -826,7 +938,16 @@ export interface KopfzeileSelect<T extends boolean = true> {
  */
 export interface FusszeileSelect<T extends boolean = true> {
   text?: T;
-  links?:
+  legalLinks?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        id?: T;
+      };
+  partnerLinks?:
     | T
     | {
         label?: T;

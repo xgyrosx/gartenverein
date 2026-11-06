@@ -14,7 +14,7 @@ export const Vereinsdaten: GlobalConfig = {
       type: 'upload',
       relationTo: 'media',
       label: 'Logo',
-      admin: { description: 'Optional. Wird links in der Kopfzeile angezeigt.' },
+      admin: { description: 'Optional. Solange kein Logo hochgeladen ist, zeigt die Website ein Platzhalter-Symbol.' },
     },
     {
       type: 'row',

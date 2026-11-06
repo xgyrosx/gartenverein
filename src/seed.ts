@@ -35,21 +35,11 @@ async function placeholderImage(colors: [string, string, string]) {
   return sharp(Buffer.from(svg)).png().toBuffer()
 }
 
-/** Einfaches Platzhalter-Logo: Kreis mit Blatt. */
-async function placeholderLogo(colors: [string, string, string]) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
-    <circle cx="150" cy="150" r="140" fill="${colors[0]}"/>
-    <path d="M90 200 Q80 100 190 90 Q220 180 120 215Z" fill="${colors[2]}"/>
-    <path d="M95 205 Q140 150 185 100" stroke="${colors[0]}" stroke-width="6" fill="none"/>
-  </svg>`
-  return sharp(Buffer.from(svg)).png().toBuffer()
-}
-
 async function main() {
   const payload = await getPayload({ config })
 
-  const upload = async (name: string, alt: string, colors: [string, string, string], kind: 'landschaft' | 'logo' = 'landschaft') => {
-    const data = kind === 'logo' ? await placeholderLogo(colors) : await placeholderImage(colors)
+  const upload = async (name: string, alt: string, colors: [string, string, string]) => {
+    const data = await placeholderImage(colors)
     return payload.create({
       collection: 'media',
       data: { alt },
@@ -179,12 +169,10 @@ async function main() {
   // Globals: nur befüllen, wenn noch leer.
   const verein = await payload.findGlobal({ slug: 'vereinsdaten' })
   if (!verein.street) {
-    const logo = await upload('beispiel-logo.png', 'Logo: grünes Blatt in einem Kreis', ['#2c5a28', '#478c3b', '#98c789'], 'logo')
     await payload.updateGlobal({
       slug: 'vereinsdaten',
       data: {
         name: 'Gartenverein Sonnenhalde',
-        logo: logo.id,
         street: 'Hangstrasse 12',
         zip: '8000',
         city: 'Musterstadt',
@@ -195,27 +183,104 @@ async function main() {
     payload.logger.info('Vereinsdaten angelegt.')
   }
 
-  const kopf = await payload.findGlobal({ slug: 'kopfzeile' })
-  if (!kopf.items?.length) {
-    const { docs } = await payload.find({ collection: 'seiten', where: { slug: { equals: 'ueber-uns' } }, limit: 1 })
+  // Platzhalter-Seiten für alle Hauptpunkte der Navigation
+  const platzhalter = (text: string): Layout => [{ blockType: 'text', content: richText(paragraph(text)) }]
+  const placeholders: { slug: string; title: string; layout: Layout }[] = [
+    {
+      slug: 'garten-pachten',
+      title: 'Garten pachten',
+      layout: platzhalter('Hier erfahren Sie bald, wie Sie bei uns einen Garten pachten können. Dieser Bereich wird noch ausgebaut.'),
+    },
+    {
+      slug: 'verein',
+      title: 'Verein',
+      layout: platzhalter('Informationen zum Verein, zum Vorstand und zu den Arealen. Dieser Bereich wird noch ausgebaut.'),
+    },
+    {
+      slug: 'aktuelles',
+      title: 'Aktuelles und Termine',
+      layout: [
+        { blockType: 'neueNews', title: 'Neueste News', count: 3 },
+        { blockType: 'naechsteTermine', title: 'Nächste Termine', count: 4 },
+      ],
+    },
+    {
+      slug: 'fuer-paechter',
+      title: 'Für Pächter:innen',
+      layout: platzhalter('Reglemente, Formulare und praktische Informationen für Pächterinnen und Pächter. Dieser Bereich wird noch ausgebaut.'),
+    },
+    {
+      slug: 'gartenwissen',
+      title: 'Gartenwissen',
+      layout: platzhalter('Tipps und Ratgeber rund um den Garten. Dieser Bereich wird noch ausgebaut.'),
+    },
+    {
+      slug: 'impressum',
+      title: 'Impressum',
+      layout: platzhalter('Platzhalter – das Impressum ist vom Verein zu ergänzen.'),
+    },
+    {
+      slug: 'datenschutz',
+      title: 'Datenschutz',
+      layout: platzhalter('Platzhalter – die Datenschutzerklärung ist vom Verein zu ergänzen.'),
+    },
+  ]
+  for (const ph of placeholders) {
+    if (await exists(ph.slug)) continue
+    await payload.create({
+      collection: 'seiten',
+      draft: false,
+      data: { title: ph.title, slug: ph.slug, _status: 'published', layout: ph.layout },
+    })
+    payload.logger.info(`Seite «${ph.slug}» angelegt.`)
+  }
+
+  const pageId = async (slug: string) => {
+    const { docs } = await payload.find({ collection: 'seiten', where: { slug: { equals: slug } }, limit: 1 })
+    return docs[0]?.id as number
+  }
+  const seite = async (label: string, slug: string) => ({ label, linkType: 'seite' as const, page: await pageId(slug) })
+
+  const nav = await payload.findGlobal({ slug: 'navigation' })
+  if (!nav.items?.length) {
     await payload.updateGlobal({
-      slug: 'kopfzeile',
+      slug: 'navigation',
       data: {
         items: [
-          ...(docs[0] ? [{ label: 'Über uns', linkType: 'seite' as const, page: docs[0].id }] : []),
-          { label: 'News', linkType: 'adresse' as const, url: '/news' },
-          { label: 'Termine', linkType: 'adresse' as const, url: '/termine' },
+          { ...(await seite('Verein', 'verein')), children: [await seite('Über uns', 'ueber-uns')] },
+          {
+            ...(await seite('Aktuelles und Termine', 'aktuelles')),
+            children: [
+              { label: 'News', linkType: 'adresse' as const, url: '/news' },
+              { label: 'Termine', linkType: 'adresse' as const, url: '/termine' },
+            ],
+          },
+          await seite('Für Pächter:innen', 'fuer-paechter'),
+          await seite('Gartenwissen', 'gartenwissen'),
+          { ...(await seite('Garten pachten', 'garten-pachten')), highlight: true },
         ],
       },
     })
-    payload.logger.info('Kopfzeile angelegt.')
+    payload.logger.info('Navigation angelegt.')
+  }
+
+  const banner = await payload.findGlobal({ slug: 'hinweisbanner' })
+  if (!banner.text) {
+    await payload.updateGlobal({
+      slug: 'hinweisbanner',
+      data: { enabled: false, type: 'info', text: 'Beispiel: Der nächste Arbeitseinsatz findet bei jeder Witterung statt.' },
+    })
   }
 
   const fuss = await payload.findGlobal({ slug: 'fusszeile' })
   if (!fuss.text) {
     await payload.updateGlobal({
       slug: 'fusszeile',
-      data: { text: 'Der Garten ist von März bis Oktober täglich von 8 bis 20 Uhr geöffnet.' },
+      data: {
+        text: 'Der Garten ist von März bis Oktober täglich von 8 bis 20 Uhr geöffnet.',
+        legalLinks: [await seite('Impressum', 'impressum'), await seite('Datenschutz', 'datenschutz')],
+        partnerLinks: [{ label: 'Dachverband (Beispiel)', linkType: 'adresse' as const, url: 'https://example.org' }],
+      },
     })
     payload.logger.info('Fusszeile angelegt.')
   }

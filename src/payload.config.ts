@@ -12,7 +12,8 @@ import { News } from './collections/News'
 import { Seiten } from './collections/Seiten'
 import { Termine } from './collections/Termine'
 import { Fusszeile } from './globals/Fusszeile'
-import { Kopfzeile } from './globals/Kopfzeile'
+import { Hinweisbanner } from './globals/Hinweisbanner'
+import { Navigation } from './globals/Navigation'
 import { Vereinsdaten } from './globals/Vereinsdaten'
 
 const filename = fileURLToPath(import.meta.url)
@@ -26,7 +27,7 @@ export default buildConfig({
     },
   },
   collections: [Seiten, News, Termine, Media, Users],
-  globals: [Kopfzeile, Fusszeile, Vereinsdaten],
+  globals: [Navigation, Hinweisbanner, Fusszeile, Vereinsdaten],
   editor: lexicalEditor(),
   i18n: {
     supportedLanguages: { de },

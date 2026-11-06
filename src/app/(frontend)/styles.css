@@ -1,6 +1,13 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-/* Farbschema: hier zentral anpassen (Grün = brand, Erdtöne = earth). */
+/* =====================================================================
+   Design-Tokens – hier zentral anpassen.
+   1. Farbpaletten: brand (Grün) und earth (Erdtöne)
+   2. Semantische Farben (--primary usw.), von den UI-Bausteinen genutzt
+   3. Radius, Seitenbreiten, Schrift
+   ===================================================================== */
+
 @theme {
   --color-brand-50: #f2f8ef;
   --color-brand-100: #e0efd9;
@@ -25,6 +32,72 @@
   --color-earth-800: #62472f;
   --color-earth-900: #523c29;
   --color-earth-950: #2d2015;
+
+  /* Seitenbreiten: max-w-page (Raster), max-w-content (Lesetext) */
+  --container-page: 64rem;
+  --container-content: 48rem;
+
+  /* Schriftgrössen: Basis etwas grösser für gute Lesbarkeit */
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.65;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  --background: var(--color-earth-50);
+  --foreground: var(--color-earth-950);
+  --card: #ffffff;
+  --card-foreground: var(--color-earth-950);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-earth-950);
+  --primary: var(--color-brand-700);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-earth-100);
+  --secondary-foreground: var(--color-earth-900);
+  --muted: var(--color-earth-100);
+  --muted-foreground: var(--color-earth-700);
+  --accent: var(--color-brand-100);
+  --accent-foreground: var(--color-brand-900);
+  --destructive: #b42318;
+  --border: var(--color-earth-200);
+  --input: var(--color-earth-300);
+  --ring: var(--color-brand-600);
+}
+
+@theme inline {
+  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  html { scroll-padding-top: 5rem; }
+  body { background: var(--background); color: var(--foreground); }
+  /* Gut sichtbarer Fokus für Tastaturbedienung */
+  :focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
 }
 
 /* Darstellung von Rich-Text-Inhalten aus dem CMS */

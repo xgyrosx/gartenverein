@@ -7,7 +7,7 @@ export function PageView({ page }: { page: Seiten }) {
   return (
     <>
       {!hasHero && (
-        <h1 className="mx-auto max-w-3xl px-4 pt-12 text-4xl font-bold text-brand-900">{page.title}</h1>
+        <h1 className="mx-auto max-w-content px-4 pt-12 text-4xl font-bold text-brand-900">{page.title}</h1>
       )}
       <RenderBlocks blocks={layout} />
       <div className="h-12" />

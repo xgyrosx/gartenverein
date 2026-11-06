@@ -22,3 +22,18 @@ export function resolveLink(item: LinkData): ResolvedLink | null {
 export function resolveLinks(items: LinkData[] | null | undefined): ResolvedLink[] {
   return (items ?? []).map(resolveLink).filter((l): l is ResolvedLink => l !== null)
 }
+
+export type NavItem = ResolvedLink & { highlight: boolean; children: ResolvedLink[] }
+
+type NavData = LinkData & { highlight?: boolean | null; children?: LinkData[] | null }
+
+/** Hauptmenü auflösen: Punkte ohne verfügbares Ziel (z. B. nicht veröffentlichte Seite) entfallen. */
+export function resolveNavigation(items: NavData[] | null | undefined): NavItem[] {
+  const out: NavItem[] = []
+  for (const item of items ?? []) {
+    const link = resolveLink(item)
+    if (!link) continue
+    out.push({ ...link, highlight: Boolean(item.highlight), children: item.highlight ? [] : resolveLinks(item.children) })
+  }
+  return out
+}

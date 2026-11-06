@@ -7,7 +7,7 @@ type Block = Extract<NonNullable<Seiten['layout']>[number], { blockType: 'bildTe
 export function BildTextBlock({ block }: { block: Block }) {
   const right = block.imagePosition === 'rechts'
   return (
-    <section className="mx-auto grid max-w-5xl items-center gap-8 px-4 py-8 md:grid-cols-2">
+    <section className="mx-auto grid max-w-page items-center gap-8 px-4 py-8 md:grid-cols-2">
       <div className={right ? 'md:order-2' : undefined}>
         <Img
           media={block.image}

@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: 'News' }
 export default async function NewsPage() {
   const news = await getNewsList()
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
+    <div className="mx-auto max-w-page px-4 py-12">
       <h1 className="text-4xl font-bold text-brand-900">News</h1>
       {news.length === 0 ? (
         <p className="mt-6 text-lg">Noch keine News vorhanden.</p>
