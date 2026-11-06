@@ -7,9 +7,13 @@ import { DiesenMonat } from './DiesenMonat'
 import { Hero } from './Hero'
 import { Hinweisbox } from './Hinweisbox'
 import { Karten } from './Karten'
+import { Kontakt } from './Kontakt'
 import { NaechsteTermine } from './NaechsteTermine'
 import { NeueNews } from './NeueNews'
+import { OeffnungszeitenBaustein } from './Oeffnungszeiten'
+import { Personenraster } from './Personenraster'
 import { Preistabelle } from './Preistabelle'
+import { Tabelle } from './Tabelle'
 import { Text } from './Text'
 
 /** Alle Bausteine, die auf einer Seite verwendet werden können. */
@@ -22,6 +26,10 @@ export const pageBlocks: Block[] = [
   Ablauf,
   Preistabelle,
   Angebotsliste,
+  Personenraster,
+  OeffnungszeitenBaustein,
+  Kontakt,
+  Tabelle,
   NeueNews,
   NaechsteTermine,
   DiesenMonat,

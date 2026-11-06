@@ -22,6 +22,8 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { KonditionenHinweis as KonditionenHinweis_8756b1659008d5ca09eab3eca13c2d40 } from '@/components/admin/KonditionenHinweis'
+import { OeffnungszeitenHinweis as OeffnungszeitenHinweis_0960ad2e4ac2570612da09d23391412c } from '@/components/admin/OeffnungszeitenHinweis'
+import { KontaktHinweis as KontaktHinweis_013c8561e71393f95502e9536470d145 } from '@/components/admin/KontaktHinweis'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -55,6 +57,8 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@/components/admin/KonditionenHinweis#KonditionenHinweis": KonditionenHinweis_8756b1659008d5ca09eab3eca13c2d40,
+  "@/components/admin/OeffnungszeitenHinweis#OeffnungszeitenHinweis": OeffnungszeitenHinweis_0960ad2e4ac2570612da09d23391412c,
+  "@/components/admin/KontaktHinweis#KontaktHinweis": KontaktHinweis_013c8561e71393f95502e9536470d145,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,

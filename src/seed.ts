@@ -7,6 +7,7 @@ import { makeCtx } from './seed/helpers'
 import { seedKonditionen } from './seed/konditionen'
 import { seedNavigation } from './seed/navigation'
 import { seedPages } from './seed/pages'
+import { seedVerein } from './seed/verein'
 
 // Beispielinhalte anlegen. Bereits vorhandene Inhalte werden nicht verändert.
 // Top-Level-await, damit «payload run» auf das Ende des Seeds wartet.
@@ -15,6 +16,7 @@ try {
   const ctx = makeCtx(payload)
 
   await seedKonditionen(ctx)
+  await seedVerein(ctx)
   await seedAktuelles(ctx)
   await seedPages(ctx)
   await seedBase(ctx)

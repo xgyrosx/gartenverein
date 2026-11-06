@@ -58,6 +58,13 @@ export const Gartenangebote: CollectionConfig = {
       min: 0,
       admin: { description: 'Optional.' },
     },
+    {
+      name: 'areal',
+      type: 'relationship',
+      relationTo: 'areale',
+      label: 'Areal',
+      admin: { description: 'Optional. Auf welchem Areal liegt das Angebot?' },
+    },
     { name: 'hinweis', type: 'textarea', label: 'Hinweis', admin: { description: 'Optional, z. B. «Besichtigung nach Absprache».' } },
   ],
 }

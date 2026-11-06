@@ -32,3 +32,9 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Preise ändern:** Garten → **Konditionen (Preise)**. Das ist die einzige Stelle für Preise; sie erscheinen überall, wo der Baustein «Preistabelle» steht. Solange «nur Beispielwerte» angekreuzt ist, steht bei den Preisen «Beispiel – vom Verein zu bestätigen».
 - **Freie Gärten melden:** Garten → **Gartenangebote** → «Neu erstellen». Art und Status (Verfügbar / Nur Warteliste / Ausgebucht) wählen und veröffentlichen. Der Status erscheint auf «Garten pachten» als Text.
 - **Neue Bausteine für Seiten:** «Karten» (Info-Karten mit Link), «Ablauf» (nummerierte Schritte), «Preistabelle», «Angebotsliste». Im «Hero» kann ein Button eingeblendet werden.
+
+## Verein, Areale, Hütten (R7)
+- **Personen:** Verein → **Personen**. Gruppe wählen (Vorstand, Ansprechperson, Ehrenmitglied); die Sortierzahl bestimmt die Reihenfolge. Nur Kontaktangaben eintragen, die veröffentlicht werden dürfen. Angezeigt werden sie über den Baustein «Personenraster».
+- **Areale:** Verein → **Areale** → «Neu erstellen» (Name, Kurzbeschrieb, Adresse, Bilder, Parkplätze). Koordinaten sind optional; sie verbessern den Link «Route/Karte öffnen» (OpenStreetMap).
+- **Öffnungszeiten Materialhütte:** Verein → **Öffnungszeiten Materialhütte**. Reguläre Tage und Ausnahmen (z. B. Ferien) eintragen; sie erscheinen überall, wo der Baustein «Öffnungszeiten» steht.
+- Neue Bausteine: «Personenraster», «Öffnungszeiten», «Kontaktdaten des Vereins» (aus den Vereinsdaten) und «Tabelle (Preisliste)».

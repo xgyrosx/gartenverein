@@ -97,12 +97,71 @@ export async function seedPages(ctx: Ctx) {
     },
   ])
 
-  await page('verein', 'Verein', platzhalter('Platzhalter – wird in R7 ausgebaut.'))
+  await page('vorstand', 'Vorstand und Ansprechpersonen', [
+    { blockType: 'text', content: richText(paragraph('Der Vorstand führt den Verein. Für Fragen zu einem Areal sind die Ansprechpersonen da.')) },
+    { blockType: 'personenraster', title: 'Vorstand', group: 'vorstand' },
+    { blockType: 'personenraster', title: 'Ansprechpersonen', group: 'ansprechperson' },
+    { blockType: 'personenraster', title: 'Ehrenmitglieder', group: 'ehrenmitglied' },
+  ])
+  await page('kontakt', 'Kontakt', [
+    { blockType: 'text', content: richText(paragraph('Haben Sie Fragen zum Verein oder zu einem Garten? Wir freuen uns über Ihre Nachricht. Ein Kontaktformular ist in Vorbereitung.')) },
+    { blockType: 'kontakt', title: 'So erreichen Sie uns' },
+  ])
+  await page('materialhuette', 'Materialhütte', [
+    {
+      blockType: 'text',
+      content: richText(
+        heading('Werkzeug und Material für alle Pächter:innen'),
+        paragraph('In der Materialhütte können Pächterinnen und Pächter Werkzeuge ausleihen und Material beziehen. Bitte bringen Sie Geliehenes sauber zurück.'),
+      ),
+    },
+    { blockType: 'oeffnungszeiten', title: 'Öffnungszeiten' },
+  ])
+  await page('vereinshuette', 'Vereinshütte', [
+    {
+      blockType: 'text',
+      content: richText(
+        heading('Feiern im Garten'),
+        paragraph('Die Vereinshütte steht Mitgliedern für private Anlässe zur Verfügung. Sie bietet Platz für rund 30 Personen und hat eine kleine Küche.'),
+      ),
+    },
+    {
+      blockType: 'tabelle',
+      title: 'Preise (Beispiel – vom Verein zu bestätigen)',
+      col1: 'Leistung',
+      col2: 'Preis',
+      col3: 'Hinweis',
+      rows: [
+        { a: 'Miete halber Tag', b: 'CHF 120', c: 'Beispiel' },
+        { a: 'Miete ganzer Tag', b: 'CHF 200', c: 'Beispiel' },
+        { a: 'Reinigung (falls nicht selbst)', b: 'CHF 60', c: 'Beispiel' },
+      ],
+    },
+    {
+      blockType: 'hinweisbox',
+      variant: 'hinweis',
+      title: 'Anfrage folgt online',
+      content: richText(paragraph('Eine Online-Anfrage ist in Vorbereitung. Bis dahin wenden Sie sich bitte an den Vorstand.')),
+    },
+  ])
+  await page('verein', 'Verein', [
+    { blockType: 'text', content: richText(paragraph('Wer wir sind, wo wir gärtnern und wie Sie uns erreichen.')) },
+    {
+      blockType: 'karten',
+      cards: [
+        { title: 'Über uns', text: 'Geschichte und Leitbild des Vereins.', label: 'Mehr erfahren', linkType: 'seite', page: await pageId('ueber-uns') },
+        { title: 'Vorstand und Ansprechpersonen', text: 'Wer im Verein Verantwortung trägt.', label: 'Zum Vorstand', linkType: 'seite', page: await pageId('vorstand') },
+        { title: 'Areale', text: 'Unsere Gartenareale mit Adressen und Karte.', label: 'Zu den Arealen', linkType: 'adresse', url: '/areale' },
+        { title: 'Materialhütte', text: 'Werkzeug ausleihen, Öffnungszeiten.', label: 'Zur Materialhütte', linkType: 'seite', page: await pageId('materialhuette') },
+        { title: 'Vereinshütte', text: 'Für Feiern und Anlässe mieten.', label: 'Zur Vereinshütte', linkType: 'seite', page: await pageId('vereinshuette') },
+        { title: 'Kontakt', text: 'Adresse, E-Mail und Telefon.', label: 'Zum Kontakt', linkType: 'seite', page: await pageId('kontakt') },
+      ],
+    },
+  ])
   await page('aktuelles', 'Aktuelles und Termine', [
     { blockType: 'neueNews', title: 'Neueste News', count: 3 },
     { blockType: 'naechsteTermine', title: 'Nächste Termine', count: 4 },
   ])
-  await page('gartenwissen', 'Gartenwissen', platzhalter('Tipps und Ratgeber rund um den Garten.'))
   await page('impressum', 'Impressum', platzhalter('Platzhalter – das Impressum ist vom Verein zu ergänzen.'))
   await page('datenschutz', 'Datenschutz', platzhalter('Platzhalter – die Datenschutzerklärung ist vom Verein zu ergänzen.'))
 }

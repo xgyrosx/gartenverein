@@ -3,6 +3,10 @@ import { AngebotslisteBlock } from '@/components/blocks/AngebotslisteBlock'
 import { DiesenMonatBlock } from '@/components/blocks/DiesenMonatBlock'
 import { KartenBlock } from '@/components/blocks/KartenBlock'
 import { PreistabelleBlock } from '@/components/blocks/PreistabelleBlock'
+import { KontaktBlock } from '@/components/blocks/KontaktBlock'
+import { OeffnungszeitenBlock } from '@/components/blocks/OeffnungszeitenBlock'
+import { PersonenrasterBlock } from '@/components/blocks/PersonenrasterBlock'
+import { TabelleBlock } from '@/components/blocks/TabelleBlock'
 import { BildTextBlock } from '@/components/blocks/BildTextBlock'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { HinweisboxBlock } from '@/components/blocks/HinweisboxBlock'
@@ -39,6 +43,14 @@ export function RenderBlocks({ blocks }: { blocks: NonNullable<Seiten['layout']>
             return <AngebotslisteBlock key={key} block={block} />
           case 'diesenMonat':
             return <DiesenMonatBlock key={key} block={block} />
+          case 'personenraster':
+            return <PersonenrasterBlock key={key} block={block} />
+          case 'oeffnungszeiten':
+            return <OeffnungszeitenBlock key={key} block={block} />
+          case 'kontakt':
+            return <KontaktBlock key={key} block={block} />
+          case 'tabelle':
+            return <TabelleBlock key={key} block={block} />
           default:
             return null
         }

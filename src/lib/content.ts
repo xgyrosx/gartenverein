@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { getDraftContext } from '@/lib/draft'
-import type { Gartenangebote, News, Termine } from '@/payload-types'
+import type { Areale, Gartenangebote, News, Personen, Termine } from '@/payload-types'
 
 /** News und Termine werden immer mit den Rechten des Besuchers gelesen (nur Veröffentlichtes). */
 export async function getNewsList(limit = 20): Promise<News[]> {
@@ -51,7 +51,7 @@ export async function getUpcomingTermine(limit = 50): Promise<Termine[]> {
 }
 
 /** Adressen aller veröffentlichten Seiten bzw. News (für statische Generierung und Sitemap). */
-export async function getPublishedSlugs(collection: 'seiten' | 'news'): Promise<{ slug: string; updatedAt: string }[]> {
+export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale'): Promise<{ slug: string; updatedAt: string }[]> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection,
@@ -78,4 +78,49 @@ export async function getAngebote(type?: Gartenangebote['type'] | null): Promise
     overrideAccess: false,
   })
   return docs
+}
+
+export async function getPersonen(group?: Personen['group'] | null): Promise<Personen[]> {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'personen',
+    where: group ? { group: { equals: group } } : undefined,
+    sort: ['sort', 'name'],
+    limit: 200,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
+}
+
+export async function getAreale(): Promise<Areale[]> {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'areale',
+    sort: 'name',
+    limit: 100,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
+}
+
+export async function getAreal(slug: string): Promise<Areale | null> {
+  const payload = await getPayload({ config })
+  const { draft, user } = await getDraftContext()
+  const { docs } = await payload.find({
+    collection: 'areale',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+    draft,
+    user,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs[0] ?? null
 }

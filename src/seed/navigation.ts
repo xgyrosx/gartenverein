@@ -9,7 +9,17 @@ export async function seedNavigation({ payload, seite }: Ctx) {
     context: { disableRevalidate: true },
     data: {
       items: [
-        { ...(await seite('Verein', 'verein')), children: [await seite('Über uns', 'ueber-uns')] },
+        {
+          ...(await seite('Verein', 'verein')),
+          children: [
+            await seite('Über uns', 'ueber-uns'),
+            await seite('Vorstand und Ansprechpersonen', 'vorstand'),
+            { label: 'Areale', linkType: 'adresse' as const, url: '/areale' },
+            await seite('Materialhütte', 'materialhuette'),
+            await seite('Vereinshütte', 'vereinshuette'),
+            await seite('Kontakt', 'kontakt'),
+          ],
+        },
         {
           ...(await seite('Aktuelles und Termine', 'aktuelles')),
           children: [

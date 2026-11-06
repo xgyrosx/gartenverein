@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const news = await getNews(slug)
-  if (!news) return { title: 'News nicht gefunden' }
+  if (!news) notFound()
   return buildMetadata({ seo: news.meta, fallbackTitle: news.title, fallbackDescription: news.teaser, fallbackImage: news.image })
 }
 

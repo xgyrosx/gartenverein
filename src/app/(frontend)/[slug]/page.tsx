@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const page = await getPage(slug)
-  if (!page) return { title: 'Seite nicht gefunden' }
+  if (!page) notFound()
   return buildMetadata({ seo: page.meta, fallbackTitle: page.title })
 }
 

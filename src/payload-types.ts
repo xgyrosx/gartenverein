@@ -70,6 +70,8 @@ export interface Config {
     seiten: Seiten;
     news: News;
     termine: Termine;
+    areale: Areale;
+    personen: Personen;
     gartenangebote: Gartenangebote;
     media: Media;
     users: User;
@@ -83,6 +85,8 @@ export interface Config {
     seiten: SeitenSelect<false> | SeitenSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     termine: TermineSelect<false> | TermineSelect<true>;
+    areale: ArealeSelect<false> | ArealeSelect<true>;
+    personen: PersonenSelect<false> | PersonenSelect<true>;
     gartenangebote: GartenangeboteSelect<false> | GartenangeboteSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -101,6 +105,7 @@ export interface Config {
     fusszeile: Fusszeile;
     vereinsdaten: Vereinsdaten;
     konditionen: Konditionen;
+    oeffnungszeiten: Oeffnungszeiten;
   };
   globalsSelect: {
     navigation: NavigationSelect<false> | NavigationSelect<true>;
@@ -108,6 +113,7 @@ export interface Config {
     fusszeile: FusszeileSelect<false> | FusszeileSelect<true>;
     vereinsdaten: VereinsdatenSelect<false> | VereinsdatenSelect<true>;
     konditionen: KonditionenSelect<false> | KonditionenSelect<true>;
+    oeffnungszeiten: OeffnungszeitenSelect<false> | OeffnungszeitenSelect<true>;
   };
   locale: null;
   widgets: {
@@ -314,6 +320,51 @@ export interface Seiten {
             blockType: 'angebotsliste';
           }
         | {
+            /**
+             * Optional.
+             */
+            title?: string | null;
+            /**
+             * Leer lassen, um alle Gruppen nach Gruppe geordnet zu zeigen.
+             */
+            group?: ('vorstand' | 'ansprechperson' | 'ehrenmitglied') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'personenraster';
+          }
+        | {
+            title?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'oeffnungszeiten';
+          }
+        | {
+            title?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'kontakt';
+          }
+        | {
+            title?: string | null;
+            col1?: string | null;
+            col2?: string | null;
+            /**
+             * Leer lassen, wenn nicht benötigt.
+             */
+            col3?: string | null;
+            rows?:
+              | {
+                  a: string;
+                  b?: string | null;
+                  c?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'tabelle';
+          }
+        | {
             title?: string | null;
             /**
              * Wie viele Beiträge angezeigt werden (1–12).
@@ -496,6 +547,94 @@ export interface Termine {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Die Gartenareale des Vereins. Jedes Areal hat eine eigene Seite unter «Areale».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "areale".
+ */
+export interface Areale {
+  id: number;
+  name: string;
+  /**
+   * Teil der Internetadresse, z. B. «hangweg» ergibt /areale/hangweg. Wird aus dem Namen erzeugt, wenn leer.
+   */
+  slug: string;
+  /**
+   * 1–2 Sätze für die Übersicht.
+   */
+  summary: string;
+  street?: string | null;
+  zip?: string | null;
+  city?: string | null;
+  /**
+   * Optional, z. B. 47.4231
+   */
+  latitude?: number | null;
+  /**
+   * Optional, z. B. 8.5042
+   */
+  longitude?: number | null;
+  /**
+   * Optional. Mehrere Bilder auswählbar.
+   */
+  images?: (number | Media)[] | null;
+  /**
+   * Hinweise zu Parkplätzen und Zufahrt.
+   */
+  parking?: string | null;
+  /**
+   * Optional.
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Vorstand, Ansprechpersonen und Ehrenmitglieder. Erscheinen im Baustein «Personenraster».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personen".
+ */
+export interface Personen {
+  id: number;
+  name: string;
+  /**
+   * Z. B. «Präsidium» oder «Ansprechperson Areal 2».
+   */
+  role?: string | null;
+  group: 'vorstand' | 'ansprechperson' | 'ehrenmitglied';
+  /**
+   * Optional.
+   */
+  photo?: (number | null) | Media;
+  /**
+   * Freitext, z. B. Telefon oder E-Mail. Nur angeben, was die Person veröffentlichen möchte.
+   */
+  contact?: string | null;
+  /**
+   * Kleinere Zahlen erscheinen weiter vorne.
+   */
+  sort?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Freie und belegte Gärten bzw. Häuser. Wird auf der Seite «Garten pachten» angezeigt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -516,6 +655,10 @@ export interface Gartenangebote {
    * Optional.
    */
   area?: number | null;
+  /**
+   * Optional. Auf welchem Areal liegt das Angebot?
+   */
+  areal?: (number | null) | Areale;
   /**
    * Optional, z. B. «Besichtigung nach Absprache».
    */
@@ -591,6 +734,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'termine';
         value: number | Termine;
+      } | null)
+    | ({
+        relationTo: 'areale';
+        value: number | Areale;
+      } | null)
+    | ({
+        relationTo: 'personen';
+        value: number | Personen;
       } | null)
     | ({
         relationTo: 'gartenangebote';
@@ -746,6 +897,46 @@ export interface SeitenSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        personenraster?:
+          | T
+          | {
+              title?: T;
+              group?: T;
+              id?: T;
+              blockName?: T;
+            };
+        oeffnungszeiten?:
+          | T
+          | {
+              title?: T;
+              id?: T;
+              blockName?: T;
+            };
+        kontakt?:
+          | T
+          | {
+              title?: T;
+              id?: T;
+              blockName?: T;
+            };
+        tabelle?:
+          | T
+          | {
+              title?: T;
+              col1?: T;
+              col2?: T;
+              col3?: T;
+              rows?:
+                | T
+                | {
+                    a?: T;
+                    b?: T;
+                    c?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         neueNews?:
           | T
           | {
@@ -819,6 +1010,41 @@ export interface TermineSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "areale_select".
+ */
+export interface ArealeSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  summary?: T;
+  street?: T;
+  zip?: T;
+  city?: T;
+  latitude?: T;
+  longitude?: T;
+  images?: T;
+  parking?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "personen_select".
+ */
+export interface PersonenSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
+  group?: T;
+  photo?: T;
+  contact?: T;
+  sort?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gartenangebote_select".
  */
 export interface GartenangeboteSelect<T extends boolean = true> {
@@ -826,6 +1052,7 @@ export interface GartenangeboteSelect<T extends boolean = true> {
   type?: T;
   status?: T;
   area?: T;
+  areal?: T;
   hinweis?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1140,6 +1367,64 @@ export interface Konditionen {
   createdAt?: string | null;
 }
 /**
+ * Einzige Quelle für die Öffnungszeiten. Erscheinen überall, wo der Baustein «Öffnungszeiten» steht.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oeffnungszeiten".
+ */
+export interface Oeffnungszeiten {
+  id: number;
+  /**
+   * Nur Tage eintragen, an denen die Hütte geöffnet ist. Alle anderen Tage gelten als geschlossen.
+   */
+  regular?:
+    | {
+        day: 'mo' | 'di' | 'mi' | 'do' | 'fr' | 'sa' | 'so';
+        /**
+         * Format 09:00
+         */
+        from?: string | null;
+        /**
+         * Format 12:00
+         */
+        to?: string | null;
+        /**
+         * Optional.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Feiertage, Ferien oder Sonderöffnungen. Vergangene Ausnahmen verschwinden automatisch von der Website.
+   */
+  exceptions?:
+    | {
+        date: string;
+        closed?: boolean | null;
+        /**
+         * Format 09:00
+         */
+        from?: string | null;
+        /**
+         * Format 12:00
+         */
+        to?: string | null;
+        /**
+         * Z. B. «Betriebsferien».
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional, erscheint unter den Zeiten.
+   */
+  generalNote?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "navigation_select".
  */
@@ -1253,6 +1538,35 @@ export interface KonditionenSelect<T extends boolean = true> {
   deposit?: T;
   note?: T;
   isExample?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "oeffnungszeiten_select".
+ */
+export interface OeffnungszeitenSelect<T extends boolean = true> {
+  regular?:
+    | T
+    | {
+        day?: T;
+        from?: T;
+        to?: T;
+        note?: T;
+        id?: T;
+      };
+  exceptions?:
+    | T
+    | {
+        date?: T;
+        closed?: T;
+        from?: T;
+        to?: T;
+        note?: T;
+        id?: T;
+      };
+  generalNote?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
