@@ -45,6 +45,8 @@ export type Ctx = {
   payload: Payload
   /** Legt einen Eintrag an (ohne Revalidierung, veröffentlicht). */
   create: (collection: CollectionSlug, data: Record<string, unknown>, extra?: Record<string, unknown>) => Promise<{ id: number }>
+  /** Lädt ein Platzhalter-PDF hoch. */
+  uploadPdf: (filename: string, title: string, category: 'formular' | 'reglement' | 'information', version: string, lines: string[]) => Promise<{ id: number }>
   /** Lädt ein Platzhalterbild hoch. */
   upload: (name: string, alt: string, colors: [string, string, string], credit?: string) => Promise<Media>
   count: (collection: CollectionSlug, where?: Record<string, unknown>) => Promise<number>
@@ -90,5 +92,42 @@ export function makeCtx(payload: Payload): Ctx {
 
   const seite: Ctx['seite'] = async (label, slug) => ({ label, linkType: 'seite', page: await pageId(slug) })
 
-  return { payload, create, upload, count, page, pageId, seite }
+  const uploadPdf: Ctx['uploadPdf'] = async (filename, title, category, version, lines) => {
+    const data = makePdf(title, lines)
+    return (await payload.create({
+      collection: 'dokumente',
+      data: { title, category, version, _status: 'published' } as never,
+      file: { data, mimetype: 'application/pdf', name: filename, size: data.length },
+      context: { disableRevalidate: true },
+      draft: false,
+    })) as { id: number }
+  }
+
+  return { payload, create, upload, uploadPdf, count, page, pageId, seite }
+}
+
+/** Minimales, gültiges 1-seitiges PDF (nur Latin-1-Zeichen, Standardschrift Helvetica) für Platzhalter-Dokumente. */
+export function makePdf(title: string, lines: string[]): Buffer {
+  const esc = (t: string) => t.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)')
+  const content = ['BT', '/F1 18 Tf', '72 780 Td', `(${esc(title)}) Tj`, '/F1 12 Tf', ...lines.flatMap((l) => ['0 -22 Td', `(${esc(l)}) Tj`]), 'ET'].join('\n')
+  const contentBuf = Buffer.from(content, 'latin1')
+  const objects: Buffer[] = [
+    Buffer.from('<< /Type /Catalog /Pages 2 0 R >>'),
+    Buffer.from('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'),
+    Buffer.from('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>'),
+    Buffer.concat([Buffer.from(`<< /Length ${contentBuf.length} >>\nstream\n`), contentBuf, Buffer.from('\nendstream')]),
+    Buffer.from('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'),
+  ]
+  const parts: Buffer[] = [Buffer.from('%PDF-1.4\n')]
+  const offsets: number[] = []
+  let pos = parts[0].length
+  objects.forEach((obj, i) => {
+    offsets.push(pos)
+    const chunk = Buffer.concat([Buffer.from(`${i + 1} 0 obj\n`), obj, Buffer.from('\nendobj\n')])
+    parts.push(chunk)
+    pos += chunk.length
+  })
+  const xref = ['xref', `0 ${objects.length + 1}`, '0000000000 65535 f ', ...offsets.map((o) => `${String(o).padStart(10, '0')} 00000 n `)].join('\n')
+  parts.push(Buffer.from(`${xref}\ntrailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${pos}\n%%EOF\n`))
+  return Buffer.concat(parts)
 }

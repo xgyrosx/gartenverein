@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 
 import { getDraftContext } from '@/lib/draft'
-import type { Areale, Gartenangebote, News, Personen, Termine } from '@/payload-types'
+import type { Areale, Dokumente, Gartenangebote, News, Personen, Termine } from '@/payload-types'
 
 /** News und Termine werden immer mit den Rechten des Besuchers gelesen (nur Veröffentlichtes). */
 export async function getNewsList(limit = 20): Promise<News[]> {
@@ -199,4 +199,25 @@ export async function getAreal(slug: string): Promise<Areale | null> {
     overrideAccess: false,
   })
   return docs[0] ?? null
+}
+
+export async function getDokumente(category?: Dokumente['category'] | null): Promise<Dokumente[]> {
+  const payload = await getPayload({ config })
+  const today = new Date().toISOString().slice(0, 10)
+  const { docs } = await payload.find({
+    collection: 'dokumente',
+    where: {
+      and: [
+        ...(category ? [{ category: { equals: category } }] : []),
+        { or: [{ validUntil: { exists: false } }, { validUntil: { greater_than_equal: today } }] },
+      ],
+    },
+    sort: 'title',
+    limit: 200,
+    depth: 0,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
 }

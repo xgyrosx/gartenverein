@@ -1,9 +1,11 @@
 import type { Block } from 'payload'
 
 import { Ablauf } from './Ablauf'
+import { Akkordeon } from './Akkordeon'
 import { Angebotsliste } from './Angebotsliste'
 import { BildText } from './BildText'
 import { DiesenMonat } from './DiesenMonat'
+import { Dokumentenliste } from './Dokumentenliste'
 import { Hero } from './Hero'
 import { Hinweisbox } from './Hinweisbox'
 import { Karten } from './Karten'
@@ -30,6 +32,8 @@ export const pageBlocks: Block[] = [
   OeffnungszeitenBaustein,
   Kontakt,
   Tabelle,
+  Akkordeon,
+  Dokumentenliste,
   NeueNews,
   NaechsteTermine,
   DiesenMonat,

@@ -7,6 +7,7 @@ import { makeCtx } from './seed/helpers'
 import { seedKonditionen } from './seed/konditionen'
 import { seedNavigation } from './seed/navigation'
 import { seedPages } from './seed/pages'
+import { seedPaechter } from './seed/paechter'
 import { seedVerein } from './seed/verein'
 
 // Beispielinhalte anlegen. Bereits vorhandene Inhalte werden nicht verändert.
@@ -18,6 +19,7 @@ try {
   await seedKonditionen(ctx)
   await seedVerein(ctx)
   await seedAktuelles(ctx)
+  await seedPaechter(ctx)
   await seedPages(ctx)
   await seedBase(ctx)
   await seedNavigation(ctx)

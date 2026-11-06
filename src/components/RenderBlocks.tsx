@@ -7,6 +7,8 @@ import { KontaktBlock } from '@/components/blocks/KontaktBlock'
 import { OeffnungszeitenBlock } from '@/components/blocks/OeffnungszeitenBlock'
 import { PersonenrasterBlock } from '@/components/blocks/PersonenrasterBlock'
 import { TabelleBlock } from '@/components/blocks/TabelleBlock'
+import { AkkordeonBlock } from '@/components/blocks/AkkordeonBlock'
+import { DokumentenlisteBlock } from '@/components/blocks/DokumentenlisteBlock'
 import { BildTextBlock } from '@/components/blocks/BildTextBlock'
 import { HeroBlock } from '@/components/blocks/HeroBlock'
 import { HinweisboxBlock } from '@/components/blocks/HinweisboxBlock'
@@ -51,6 +53,10 @@ export function RenderBlocks({ blocks }: { blocks: NonNullable<Seiten['layout']>
             return <KontaktBlock key={key} block={block} />
           case 'tabelle':
             return <TabelleBlock key={key} block={block} />
+          case 'akkordeon':
+            return <AkkordeonBlock key={key} block={block} />
+          case 'dokumentenliste':
+            return <DokumentenlisteBlock key={key} block={block} />
           default:
             return null
         }

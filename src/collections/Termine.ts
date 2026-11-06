@@ -124,6 +124,13 @@ export const Termine: CollectionConfig = {
       validate: (v: string | null | undefined) => (!v || /^https?:\/\//.test(v) ? true : 'Der Link muss mit https:// beginnen.'),
     },
     {
+      name: 'attachment',
+      type: 'upload',
+      relationTo: 'dokumente',
+      label: 'Dokument-Anhang',
+      admin: { description: 'Optional, z. B. Programm oder Anmeldeformular. Zuerst unter «Dokumente» hochladen.' },
+    },
+    {
       name: 'description',
       type: 'richText',
       label: 'Beschreibung',

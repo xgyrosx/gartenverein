@@ -45,3 +45,10 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Kalender:** Jeder Termin hat einen Link «Zum Kalender hinzufügen»; auf der Terminseite gibt es ausserdem ein Kalender-Abo (ICS) für alle kommenden Termine.
 - **News:** neu sind das Feld «Bildunterschrift / Bildnachweis» und die Seitennummerierung im Archiv (9 Beiträge pro Seite).
 - Die Bausteine heissen jetzt «Newsliste» und «Terminliste» (Anzahl und – bei Terminen – Kategorie wählbar).
+
+## Für Pächter:innen (R9)
+- **Dokument hochladen:** Garten → **Dokumente** → «Neu erstellen», PDF wählen, Titel, Kategorie (Formular / Reglement / Information) und «Version / Stand» angeben, veröffentlichen. Mit «Gültig bis» verschwindet es danach automatisch aus den Listen.
+- **Dokumente auf einer Seite zeigen:** Baustein «Dokumentenliste» hinzufügen; optional nur eine Kategorie wählen. Dateityp und Grösse werden automatisch angezeigt.
+- **Aufklappbare Themen:** Baustein «Akkordeon» (z. B. für Parkplätze, Bussen, Grillieren). Pro Thema Überschrift und Text eintragen.
+- **Termin mit Anhang:** Beim Termin das Feld «Dokument-Anhang» nutzen (Dokument vorher unter «Dokumente» hochladen).
+- Auf Formularseiten steht der Hinweis «Online-Formular folgt, bis dahin PDF-Download».

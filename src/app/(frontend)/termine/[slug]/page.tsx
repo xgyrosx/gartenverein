@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { terminKategorien } from '@/collections/Termine'
+import { DokumentEintrag } from '@/components/DokumentListe'
 import { RichText } from '@/components/RichText'
 import { getPublishedSlugs, getTermin } from '@/lib/content'
 import { formatRange } from '@/lib/format'
@@ -110,6 +111,14 @@ export default async function TerminDetail({ params }: Args) {
         )}
       </dl>
       {t.description && <RichText data={t.description} className="mt-8" />}
+      {typeof t.attachment === 'object' && t.attachment && (
+        <div className="mt-8">
+          <h2 className="mb-2 text-xl font-bold">Dokument zum Termin</h2>
+          <ul>
+            <DokumentEintrag d={t.attachment} />
+          </ul>
+        </div>
+      )}
       <p className="mt-8">
         <a className="font-medium text-brand-800 underline hover:text-brand-950" href={`/termine/${t.slug}/ics`}>
           Zum Kalender hinzufügen (ICS)

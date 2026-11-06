@@ -73,6 +73,7 @@ export interface Config {
     areale: Areale;
     personen: Personen;
     gartenangebote: Gartenangebote;
+    dokumente: Dokumente;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -88,6 +89,7 @@ export interface Config {
     areale: ArealeSelect<false> | ArealeSelect<true>;
     personen: PersonenSelect<false> | PersonenSelect<true>;
     gartenangebote: GartenangeboteSelect<false> | GartenangeboteSelect<true>;
+    dokumente: DokumenteSelect<false> | DokumenteSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -365,6 +367,49 @@ export interface Seiten {
             blockType: 'tabelle';
           }
         | {
+            /**
+             * Optional.
+             */
+            title?: string | null;
+            /**
+             * Jedes Thema wird als aufklappbarer Abschnitt angezeigt (Frage/Antwort oder Thema/Text).
+             */
+            items?:
+              | {
+                  title: string;
+                  content: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  };
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'akkordeon';
+          }
+        | {
+            title?: string | null;
+            /**
+             * Leer lassen, um alle Dokumente nach Kategorie geordnet zu zeigen.
+             */
+            category?: ('formular' | 'reglement' | 'information') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'dokumentenliste';
+          }
+        | {
             title?: string | null;
             /**
              * Wie viele Beiträge angezeigt werden (1–12).
@@ -555,6 +600,10 @@ export interface Termine {
    */
   registrationUrl?: string | null;
   /**
+   * Optional, z. B. Programm oder Anmeldeformular. Zuerst unter «Dokumente» hochladen.
+   */
+  attachment?: (number | null) | Dokumente;
+  /**
    * Optional. Was passiert, was mitbringen?
    */
   description?: {
@@ -649,6 +698,40 @@ export interface Areale {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * PDF-Dokumente zum Herunterladen: Formulare, Reglemente und Informationen.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dokumente".
+ */
+export interface Dokumente {
+  id: number;
+  /**
+   * Z. B. «Gartenordnung».
+   */
+  title: string;
+  category: 'formular' | 'reglement' | 'information';
+  /**
+   * Z. B. «Stand März 2025».
+   */
+  version?: string | null;
+  /**
+   * Optional. Nach diesem Datum verschwindet das Dokument automatisch aus den Listen.
+   */
+  validUntil?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * Vorstand, Ansprechpersonen und Ehrenmitglieder. Erscheinen im Baustein «Personenraster».
@@ -792,6 +875,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'gartenangebote';
         value: number | Gartenangebote;
+      } | null)
+    | ({
+        relationTo: 'dokumente';
+        value: number | Dokumente;
       } | null)
     | ({
         relationTo: 'media';
@@ -983,6 +1070,28 @@ export interface SeitenSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        akkordeon?:
+          | T
+          | {
+              title?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    content?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        dokumentenliste?:
+          | T
+          | {
+              title?: T;
+              category?: T;
+              id?: T;
+              blockName?: T;
+            };
         neueNews?:
           | T
           | {
@@ -1058,6 +1167,7 @@ export interface TermineSelect<T extends boolean = true> {
   registrationRequired?: T;
   registrationText?: T;
   registrationUrl?: T;
+  attachment?: T;
   description?: T;
   meta?:
     | T
@@ -1126,6 +1236,28 @@ export interface GartenangeboteSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dokumente_select".
+ */
+export interface DokumenteSelect<T extends boolean = true> {
+  title?: T;
+  category?: T;
+  version?: T;
+  validUntil?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

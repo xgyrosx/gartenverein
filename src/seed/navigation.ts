@@ -27,7 +27,16 @@ export async function seedNavigation({ payload, seite }: Ctx) {
             { label: 'Termine', linkType: 'adresse' as const, url: '/termine' },
           ],
         },
-        await seite('Für Pächter:innen', 'fuer-paechter'),
+        {
+          ...(await seite('Für Pächter:innen', 'fuer-paechter')),
+          children: [
+            await seite('Gartenordnung', 'gartenordnung'),
+            await seite('Parkplätze und Bussen', 'parkplaetze-bussen'),
+            await seite('Bauen und Baugesuche', 'bauen-baugesuche'),
+            await seite('Formulare und Downloads', 'formulare-downloads'),
+            await seite('Materialhütte-Infos', 'materialhuette-infos'),
+          ],
+        },
         { label: 'Gartenwissen', linkType: 'adresse' as const, url: '/gartenwissen' },
         { ...(await seite('Garten pachten', 'garten-pachten')), highlight: true },
       ],

@@ -41,7 +41,6 @@ export async function seedPages(ctx: Ctx) {
       content: richText(paragraph('Eine Anmeldung über die Website ist in Vorbereitung. Bis dahin melden Sie sich bitte direkt beim Vorstand.')),
     },
   ])
-  await page('fuer-paechter', 'Für Pächter:innen', platzhalter('Platzhalter – wird in R9 ausgebaut.'))
 
   await page('start', 'Startseite', [
     {
