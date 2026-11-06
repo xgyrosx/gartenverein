@@ -58,3 +58,8 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Monate wählen:** Artikel mit gewähltem Monat erscheinen im «Gartenjahr» (`/gartenwissen/gartenjahr`) und auf der Startseite unter «Diesen Monat im Garten» – automatisch passend zum aktuellen Monat.
 - **Suche:** Die Suche auf der Seite «Gartenwissen» findet veröffentlichte Artikel und Seiten über Titel und Teaser. Sie wird automatisch nachgeführt; Entwürfe sind nicht auffindbar.
 - Kategorien: Boden & Düngen, Pflanzen & Ernte, Unkraut, Tiere & Insekten, Beeren, Allgemein.
+
+## Galerie (R11)
+- **Album anlegen:** Inhalte → **Alben** → «Neu erstellen». Titel, Jahr und Bilder wählen (mehrere auf einmal; das erste Bild ist das Titelbild). Die Galerie ordnet die Alben nach Jahr.
+- **Bilder hochladen:** Inhalte → **Bilder**. Jedes Bild braucht einen Alt-Text; optional ein Bildnachweis («Foto: …»). Beides erscheint in der Grossansicht. Sehr grosse Fotos werden beim Hochladen automatisch auf höchstens 2000 Pixel Breite verkleinert.
+- **Grossansicht:** Besucher klicken ein Bild an, blättern mit den Pfeiltasten oder Wischen und schliessen mit Esc.

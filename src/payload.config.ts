@@ -10,6 +10,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Alben } from './collections/Alben'
 import { Areale } from './collections/Areale'
 import { Dokumente } from './collections/Dokumente'
 import { Gartenangebote } from './collections/Gartenangebote'
@@ -36,7 +37,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Seiten, News, Termine, Areale, Personen, Ratgeber, Gartenangebote, Dokumente, Media, Users],
+  collections: [Seiten, News, Termine, Alben, Areale, Personen, Ratgeber, Gartenangebote, Dokumente, Media, Users],
   globals: [Navigation, Hinweisbanner, Fusszeile, Vereinsdaten, Konditionen, Oeffnungszeiten],
   editor: lexicalEditor(),
   i18n: {

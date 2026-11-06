@@ -70,6 +70,7 @@ export interface Config {
     seiten: Seiten;
     news: News;
     termine: Termine;
+    alben: Alben;
     areale: Areale;
     personen: Personen;
     ratgeber: Ratgeber;
@@ -88,6 +89,7 @@ export interface Config {
     seiten: SeitenSelect<false> | SeitenSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     termine: TermineSelect<false> | TermineSelect<true>;
+    alben: AlbenSelect<false> | AlbenSelect<true>;
     areale: ArealeSelect<false> | ArealeSelect<true>;
     personen: PersonenSelect<false> | PersonenSelect<true>;
     ratgeber: RatgeberSelect<false> | RatgeberSelect<true>;
@@ -470,6 +472,10 @@ export interface Media {
    * Kurze Beschreibung des Bildes für Menschen, die es nicht sehen können (z. B. «Frau giesst Tomatenpflanzen im Gemeinschaftsgarten»).
    */
   alt: string;
+  /**
+   * Optional, z. B. «Foto: Vorname Nachname». Wird in der Galerie angezeigt.
+   */
+  credit?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -738,6 +744,39 @@ export interface Dokumente {
   focalY?: number | null;
 }
 /**
+ * Fotoalben für die Galerie, z. B. «Sommerfest 2026».
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "alben".
+ */
+export interface Alben {
+  id: number;
+  title: string;
+  /**
+   * Teil der Internetadresse, z. B. «sommerfest-2026» ergibt /galerie/sommerfest-2026. Wird aus dem Titel erzeugt, wenn leer.
+   */
+  slug: string;
+  /**
+   * Bestimmt, unter welchem Jahr das Album in der Galerie erscheint.
+   */
+  year: number;
+  /**
+   * Optional, z. B. Tag des Anlasses.
+   */
+  date?: string | null;
+  /**
+   * Optional.
+   */
+  description?: string | null;
+  /**
+   * Mehrere Bilder auswählbar. Das erste Bild ist das Titelbild. Jedes Bild braucht einen Alt-Text; den Bildnachweis pflegen Sie beim Bild unter «Bilder».
+   */
+  images: (number | Media)[];
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Vorstand, Ansprechpersonen und Ehrenmitglieder. Erscheinen im Baustein «Personenraster».
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -948,6 +987,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'termine';
         value: number | Termine;
+      } | null)
+    | ({
+        relationTo: 'alben';
+        value: number | Alben;
       } | null)
     | ({
         relationTo: 'areale';
@@ -1275,6 +1318,21 @@ export interface TermineSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "alben_select".
+ */
+export interface AlbenSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  year?: T;
+  date?: T;
+  description?: T;
+  images?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "areale_select".
  */
 export interface ArealeSelect<T extends boolean = true> {
@@ -1382,6 +1440,7 @@ export interface DokumenteSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  credit?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

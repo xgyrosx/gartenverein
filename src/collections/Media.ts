@@ -31,8 +31,16 @@ export const Media: CollectionConfig = {
           'Kurze Beschreibung des Bildes für Menschen, die es nicht sehen können (z. B. «Frau giesst Tomatenpflanzen im Gemeinschaftsgarten»).',
       },
     },
+    {
+      name: 'credit',
+      type: 'text',
+      label: 'Bildnachweis',
+      admin: { description: 'Optional, z. B. «Foto: Vorname Nachname». Wird in der Galerie angezeigt.' },
+    },
   ],
   upload: {
+    // Originale werden beim Hochladen auf maximal 2000 px Breite verkleinert (nie vergrössert).
+    resizeOptions: { width: 2000, fit: 'inside', withoutEnlargement: true },
     mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
     focalPoint: true,
     adminThumbnail: 'thumbnail',

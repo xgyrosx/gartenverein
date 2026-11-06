@@ -17,6 +17,7 @@ export async function seedNavigation({ payload, seite }: Ctx) {
             { label: 'Areale', linkType: 'adresse' as const, url: '/areale' },
             await seite('Materialhütte', 'materialhuette'),
             await seite('Vereinshütte', 'vereinshuette'),
+            { label: 'Galerie', linkType: 'adresse' as const, url: '/galerie' },
             await seite('Kontakt', 'kontakt'),
           ],
         },

@@ -53,6 +53,9 @@ importers:
       payload:
         specifier: 3.93.0
         version: 3.93.0(graphql@16.15.0)(supports-color@7.2.0)(typescript@5.7.3)
+      photoswipe:
+        specifier: ^5.4.4
+        version: 5.4.4
       radix-ui:
         specifier: ^1.8.1
         version: 1.8.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -3996,6 +3999,10 @@ packages:
     hasBin: true
     peerDependencies:
       graphql: ^16.8.1
+
+  photoswipe@5.4.4:
+    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
+    engines: {node: '>= 0.12.0'}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -8879,6 +8886,8 @@ snapshots:
       - supports-color
       - typescript
       - utf-8-validate
+
+  photoswipe@5.4.4: {}
 
   picocolors@1.1.1: {}
 

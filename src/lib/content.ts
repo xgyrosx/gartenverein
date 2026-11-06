@@ -2,7 +2,7 @@ import config from '@payload-config'
 import { getPayload, type Where } from 'payload'
 
 import { getDraftContext } from '@/lib/draft'
-import type { Areale, Dokumente, Ratgeber, Gartenangebote, News, Personen, Termine } from '@/payload-types'
+import type { Alben, Areale, Dokumente, Ratgeber, Gartenangebote, News, Personen, Termine } from '@/payload-types'
 
 /** News und Termine werden immer mit den Rechten des Besuchers gelesen (nur Veröffentlichtes). */
 export async function getNewsList(limit = 20): Promise<News[]> {
@@ -127,7 +127,7 @@ export async function getNewsPage(page: number) {
 }
 
 /** Adressen aller veröffentlichten Seiten bzw. News (für statische Generierung und Sitemap). */
-export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale' | 'termine' | 'ratgeber'): Promise<{ slug: string; updatedAt: string }[]> {
+export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale' | 'termine' | 'ratgeber' | 'alben'): Promise<{ slug: string; updatedAt: string }[]> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection,
@@ -246,6 +246,36 @@ export async function getRatgeber(slug: string): Promise<Ratgeber | null> {
   const { draft, user } = await getDraftContext()
   const { docs } = await payload.find({
     collection: 'ratgeber',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+    draft,
+    user,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs[0] ?? null
+}
+
+export async function getAlben(): Promise<Alben[]> {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'alben',
+    sort: ['-year', '-date'],
+    limit: 300,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
+}
+
+export async function getAlbum(slug: string): Promise<Alben | null> {
+  const payload = await getPayload({ config })
+  const { draft, user } = await getDraftContext()
+  const { docs } = await payload.find({
+    collection: 'alben',
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
