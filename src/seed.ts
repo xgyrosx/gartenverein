@@ -4,6 +4,7 @@ import { getPayload } from 'payload'
 import { seedAktuelles } from './seed/aktuelles'
 import { seedBase } from './seed/base'
 import { makeCtx } from './seed/helpers'
+import { seedGartenwissen } from './seed/gartenwissen'
 import { seedKonditionen } from './seed/konditionen'
 import { seedNavigation } from './seed/navigation'
 import { seedPages } from './seed/pages'
@@ -19,6 +20,7 @@ try {
   await seedKonditionen(ctx)
   await seedVerein(ctx)
   await seedAktuelles(ctx)
+  await seedGartenwissen(ctx)
   await seedPaechter(ctx)
   await seedPages(ctx)
   await seedBase(ctx)

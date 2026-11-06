@@ -37,7 +37,15 @@ export async function seedNavigation({ payload, seite }: Ctx) {
             await seite('Materialhütte-Infos', 'materialhuette-infos'),
           ],
         },
-        { label: 'Gartenwissen', linkType: 'adresse' as const, url: '/gartenwissen' },
+        {
+          label: 'Gartenwissen',
+          linkType: 'adresse' as const,
+          url: '/gartenwissen',
+          children: [
+            { label: 'Alle Artikel', linkType: 'adresse' as const, url: '/gartenwissen' },
+            { label: 'Das Gartenjahr', linkType: 'adresse' as const, url: '/gartenwissen/gartenjahr' },
+          ],
+        },
         { ...(await seite('Garten pachten', 'garten-pachten')), highlight: true },
       ],
     },

@@ -1,8 +1,8 @@
 import config from '@payload-config'
-import { getPayload } from 'payload'
+import { getPayload, type Where } from 'payload'
 
 import { getDraftContext } from '@/lib/draft'
-import type { Areale, Dokumente, Gartenangebote, News, Personen, Termine } from '@/payload-types'
+import type { Areale, Dokumente, Ratgeber, Gartenangebote, News, Personen, Termine } from '@/payload-types'
 
 /** News und Termine werden immer mit den Rechten des Besuchers gelesen (nur Veröffentlichtes). */
 export async function getNewsList(limit = 20): Promise<News[]> {
@@ -127,7 +127,7 @@ export async function getNewsPage(page: number) {
 }
 
 /** Adressen aller veröffentlichten Seiten bzw. News (für statische Generierung und Sitemap). */
-export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale' | 'termine'): Promise<{ slug: string; updatedAt: string }[]> {
+export async function getPublishedSlugs(collection: 'seiten' | 'news' | 'areale' | 'termine' | 'ratgeber'): Promise<{ slug: string; updatedAt: string }[]> {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection,
@@ -220,4 +220,39 @@ export async function getDokumente(category?: Dokumente['category'] | null): Pro
     overrideAccess: false,
   })
   return docs
+}
+
+export async function getRatgeberList(opts: { category?: Ratgeber['category'] | null; month?: number | null; limit?: number } = {}): Promise<Ratgeber[]> {
+  const payload = await getPayload({ config })
+  const and: Where[] = [
+    ...(opts.category ? [{ category: { equals: opts.category } }] : []),
+    ...(opts.month ? [{ months: { in: [String(opts.month)] } }] : []),
+  ]
+  const { docs } = await payload.find({
+    collection: 'ratgeber',
+    where: and.length ? { and } : undefined,
+    sort: 'title',
+    limit: opts.limit ?? 200,
+    depth: 1,
+    draft: false,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs
+}
+
+export async function getRatgeber(slug: string): Promise<Ratgeber | null> {
+  const payload = await getPayload({ config })
+  const { draft, user } = await getDraftContext()
+  const { docs } = await payload.find({
+    collection: 'ratgeber',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+    draft,
+    user,
+    pagination: false,
+    overrideAccess: false,
+  })
+  return docs[0] ?? null
 }

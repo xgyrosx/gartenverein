@@ -52,3 +52,9 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Aufklappbare Themen:** Baustein «Akkordeon» (z. B. für Parkplätze, Bussen, Grillieren). Pro Thema Überschrift und Text eintragen.
 - **Termin mit Anhang:** Beim Termin das Feld «Dokument-Anhang» nutzen (Dokument vorher unter «Dokumente» hochladen).
 - Auf Formularseiten steht der Hinweis «Online-Formular folgt, bis dahin PDF-Download».
+
+## Gartenwissen (R10)
+- **Artikel schreiben:** Gartenwissen → **Ratgeber** → «Neu erstellen». Titel, Kategorie, Teaser (1–2 Sätze) und Inhalt ausfüllen. Optional: Teaserbild, passende Monate und verwandte Artikel. Vorschau ansehen, dann veröffentlichen.
+- **Monate wählen:** Artikel mit gewähltem Monat erscheinen im «Gartenjahr» (`/gartenwissen/gartenjahr`) und auf der Startseite unter «Diesen Monat im Garten» – automatisch passend zum aktuellen Monat.
+- **Suche:** Die Suche auf der Seite «Gartenwissen» findet veröffentlichte Artikel und Seiten über Titel und Teaser. Sie wird automatisch nachgeführt; Entwürfe sind nicht auffindbar.
+- Kategorien: Boden & Düngen, Pflanzen & Ernte, Unkraut, Tiere & Insekten, Beeren, Allgemein.

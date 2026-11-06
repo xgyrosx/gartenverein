@@ -3,7 +3,7 @@ import type { FieldHook, TextField } from 'payload'
 import { slugify } from '@/lib/slugify'
 
 // Adressen, die von festen Bereichen der Website belegt sind
-const RESERVED = ['admin', 'api', 'next', 'news', 'termine', 'areale', 'gartenwissen', 'galerie', 'sitemap', 'robots']
+const RESERVED = ['admin', 'api', 'next', 'news', 'termine', 'areale', 'gartenwissen', 'galerie', 'sitemap', 'robots', 'kategorie', 'gartenjahr']
 
 const slugFrom =
   (sourceField: string): FieldHook =>

@@ -72,10 +72,12 @@ export interface Config {
     termine: Termine;
     areale: Areale;
     personen: Personen;
+    ratgeber: Ratgeber;
     gartenangebote: Gartenangebote;
     dokumente: Dokumente;
     media: Media;
     users: User;
+    suche: Suche;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,10 +90,12 @@ export interface Config {
     termine: TermineSelect<false> | TermineSelect<true>;
     areale: ArealeSelect<false> | ArealeSelect<true>;
     personen: PersonenSelect<false> | PersonenSelect<true>;
+    ratgeber: RatgeberSelect<false> | RatgeberSelect<true>;
     gartenangebote: GartenangeboteSelect<false> | GartenangeboteSelect<true>;
     dokumente: DokumenteSelect<false> | DokumenteSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    suche: SucheSelect<false> | SucheSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -764,6 +768,63 @@ export interface Personen {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Tipps und Anleitungen rund um den Garten.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ratgeber".
+ */
+export interface Ratgeber {
+  id: number;
+  title: string;
+  /**
+   * Teil der Internetadresse, z. B. «tomaten-giessen» ergibt /gartenwissen/tomaten-giessen. Wird aus dem Titel erzeugt, wenn leer.
+   */
+  slug: string;
+  category: 'boden-duengen' | 'pflanzen-ernte' | 'unkraut' | 'tiere-insekten' | 'beeren' | 'allgemein';
+  /**
+   * Optional. In diesen Monaten erscheint der Artikel im «Gartenjahr» und auf der Startseite unter «Diesen Monat im Garten».
+   */
+  months?: ('1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '12')[] | null;
+  /**
+   * 1–2 Sätze für Übersicht und Suche (max. 300 Zeichen).
+   */
+  teaser: string;
+  /**
+   * Optional.
+   */
+  image?: (number | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Optional. Werden unter dem Artikel als Weiterlesen-Tipp angezeigt.
+   */
+  related?: (number | Ratgeber)[] | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * Freie und belegte Gärten bzw. Häuser. Wird auf der Seite «Garten pachten» angezeigt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -829,6 +890,30 @@ export interface User {
   collection: 'users';
 }
 /**
+ * Wird automatisch gepflegt. Nur bei Problemen mit der Suche «Neu indexieren» verwenden.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suche".
+ */
+export interface Suche {
+  id: number;
+  title?: string | null;
+  priority?: number | null;
+  doc:
+    | {
+        relationTo: 'ratgeber';
+        value: number | Ratgeber;
+      }
+    | {
+        relationTo: 'seiten';
+        value: number | Seiten;
+      };
+  teaser?: string | null;
+  path?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -873,6 +958,10 @@ export interface PayloadLockedDocument {
         value: number | Personen;
       } | null)
     | ({
+        relationTo: 'ratgeber';
+        value: number | Ratgeber;
+      } | null)
+    | ({
         relationTo: 'gartenangebote';
         value: number | Gartenangebote;
       } | null)
@@ -887,6 +976,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'suche';
+        value: number | Suche;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1224,6 +1317,30 @@ export interface PersonenSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ratgeber_select".
+ */
+export interface RatgeberSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  category?: T;
+  months?: T;
+  teaser?: T;
+  image?: T;
+  content?: T;
+  related?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "gartenangebote_select".
  */
 export interface GartenangeboteSelect<T extends boolean = true> {
@@ -1334,6 +1451,19 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "suche_select".
+ */
+export interface SucheSelect<T extends boolean = true> {
+  title?: T;
+  priority?: T;
+  doc?: T;
+  teaser?: T;
+  path?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
