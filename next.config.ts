@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     // Es werden nie Bilder breiter als 2000 px ausgeliefert.
     deviceSizes: [360, 640, 828, 1080, 1200, 1600, 1920],
     imageSizes: [48, 96, 160, 256, 384],
+    // Bilder von Vercel Blob (wenn aktiv)
+    remotePatterns: [{ protocol: 'https', hostname: '*.public.blob.vercel-storage.com' }],
     localPatterns: [
       {
         pathname: '/api/media/file/**',

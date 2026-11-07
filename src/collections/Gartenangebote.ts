@@ -45,6 +45,8 @@ export const Gartenangebote: CollectionConfig = {
     {
       name: 'status',
       type: 'select',
+      // Eigener Name nötig: «enum_gartenangebote_status» ist bei Postgres schon für den Entwurf-Status belegt.
+      enumName: 'enum_gartenangebote_verfuegbarkeit',
       label: 'Status',
       required: true,
       options: angebotStatus,

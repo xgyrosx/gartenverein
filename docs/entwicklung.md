@@ -15,7 +15,8 @@ Beim ersten Aufruf von `/admin` den ersten Benutzer anlegen (wird automatisch `a
 | Befehl | Zweck |
 | --- | --- |
 | `pnpm dev` | Entwicklungsserver (legt das Datenbankschema automatisch an) |
-| `pnpm build` | Schema anlegen (`db:init`), dann Produktions-Build mit statischen Seiten |
+| `pnpm build` | SQLite: Schema anlegen; Postgres: Migrationen ausführen; dann Produktions-Build mit statischen Seiten (`scripts/build.mjs`) |
+| `pnpm migrate` / `pnpm migrate:create <name>` | Nur Postgres: Migrationen anwenden bzw. nach Schema-Änderungen neu erzeugen (`src/migrations/`) |
 | `pnpm start` | Produktionsserver (nach `pnpm build`) |
 | `pnpm seed` | Beispielinhalte anlegen; Vorhandenes wird nicht überschrieben |
 | `pnpm redirects:import` | `docs/redirects-alt-neu.csv` als Weiterleitungen einlesen (ohne Duplikate) |
@@ -48,8 +49,8 @@ Start 94 / Termine 100 / Gartenwissen 94 / Garten pachten 100 (Performance); Acc
 
 ## Offene Punkte
 - **404 im Browser:** Unbekannte Adressen unter dynamischen Routen (z. B. `/gibtsnicht`) liefern korrekt Status 404, aber der Inhalt wird im Production-Build erst per JavaScript dargestellt (Next-«Error-Shell»). Ursache nicht gefunden; Experimente ohne Wirkung: Draft-Banner entfernen, `revalidate` entfernen, `not-found.tsx` pro Segment, `notFound()` in `generateMetadata`.
-- **Datenbank:** SQLite mit automatischem Schema-Abgleich («push», auch beim Build via `db:init`). Vor dem Go-Live auf Migrationen umstellen.
+- **Datenbank:** Lokal SQLite (automatischer Schema-Abgleich), auf Vercel Postgres/Neon mit Migrationen. Nach jeder Schema-Änderung eine Migration erzeugen (`pnpm migrate:create`, mit `DATABASE_URL=postgres://…`) und einchecken. Deployment: `docs/deployment-vercel.md`.
 - **Formulare, E-Mail, Newsletter, Mitgliederbereich:** bewusst nicht enthalten (R13–R15).
-- **Hosting und Backups:** offen. Nötig sind ein Node-Server mit persistentem Dateisystem für `gartenverein.db`, `media/` und `documents/`.
+- **Hosting:** Vercel + Neon + Blob vorbereitet (`docs/deployment-vercel.md`), noch nicht mit echten Konten getestet. **Backups** sind offen.
 - **Inhalte:** Echte Texte, Preise (`Konditionen`), Personen, Rechtstexte (Impressum, Datenschutz) und Logo stehen aus; die Wissensartikel der alten Seite müssen mit denselben Adressen als Ratgeber angelegt werden, damit die Weiterleitungen greifen.
 - **Adressen sind flach:** Seiten haben nur eine Ebene (`/formulare-downloads`, nicht `/fuer-paechter/formulare`). Termin-Adressen enthalten das Datum, alte Termin-URLs leiten daher auf `/termine`.

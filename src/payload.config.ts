@@ -1,8 +1,8 @@
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { de } from '@payloadcms/translations/languages/de'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { createDatabaseAdapter } from './db'
 import { revalidateAfterChange, revalidateAfterDelete } from './hooks/revalidate'
 import { lexicalToPlainText } from './lib/richtext'
 import { defaultSeoImage, describeLayout, truncate } from './lib/seo-defaults'
@@ -52,16 +53,16 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
-  db: sqliteAdapter({
-    // Prototyp: Das Datenbankschema wird automatisch angelegt/angepasst (auch beim Build).
-    // Vor dem Go-Live auf Migrationen umstellen (siehe docs/entwicklung.md).
-    push: true,
-    client: {
-      url: process.env.DATABASE_URL || '',
-    },
-  }),
+  db: await createDatabaseAdapter(),
   sharp,
   plugins: [
+    // Dateien (Bilder, PDFs) auf Vercel Blob – nur aktiv, wenn BLOB_READ_WRITE_TOKEN gesetzt ist, sonst lokaler Ordner.
+    vercelBlobStorage({
+      enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      // Öffentliche Dateien direkt vom Blob-CDN ausliefern (schneller, keine Funktionsaufrufe).
+      collections: { media: { disablePayloadAccessControl: true }, dokumente: { disablePayloadAccessControl: true } },
+      token: process.env.BLOB_READ_WRITE_TOKEN ?? '',
+    }),
     // Suche: nur veröffentlichte Ratgeber-Artikel und Seiten werden indexiert.
     searchPlugin({
       collections: ['ratgeber', 'seiten'],
