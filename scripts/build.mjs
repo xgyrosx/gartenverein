@@ -31,6 +31,12 @@ if (isPostgres) {
   const direct = process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING || url
   console.log('→ Postgres: Migrationen ausführen')
   run('pnpm', ['exec', 'payload', 'migrate'], { DATABASE_URL: direct })
+  // Einmalig Beispielinhalte einspielen (nur bei leerer Datenbank): Umgebungsvariable SEED_ON_BUILD=1 setzen.
+  if (process.env.SEED_ON_BUILD === '1') {
+    console.log('→ Beispielinhalte einspielen (falls die Datenbank leer ist)')
+    run('pnpm', ['exec', 'payload', 'run', 'src/scripts/seed-if-empty.ts'])
+    run('pnpm', ['exec', 'payload', 'run', 'src/scripts/import-redirects.ts'])
+  }
 } else {
   console.log('→ SQLite: Schema anlegen')
   run('pnpm', ['db:init'])
