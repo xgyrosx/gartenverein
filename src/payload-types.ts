@@ -110,6 +110,7 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    startseite: Startseite;
     navigation: Navigation;
     hinweisbanner: Hinweisbanner;
     fusszeile: Fusszeile;
@@ -118,6 +119,7 @@ export interface Config {
     oeffnungszeiten: Oeffnungszeiten;
   };
   globalsSelect: {
+    startseite: StartseiteSelect<false> | StartseiteSelect<true>;
     navigation: NavigationSelect<false> | NavigationSelect<true>;
     hinweisbanner: HinweisbannerSelect<false> | HinweisbannerSelect<true>;
     fusszeile: FusszeileSelect<false> | FusszeileSelect<true>;
@@ -478,7 +480,6 @@ export interface Media {
    * Optional, z. B. «Foto: Vorname Nachname». Wird in der Galerie angezeigt.
    */
   credit?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -535,7 +536,11 @@ export interface News {
    */
   publishedAt: string;
   /**
-   * Ein bis zwei Sätze für die Übersicht (max. 300 Zeichen).
+   * Wird auf der Startseite und in der Übersicht beim Beitrag angezeigt.
+   */
+  category: 'aktuelles' | 'vereinsleben' | 'garten' | 'hinweis';
+  /**
+   * Ein bis zwei Sätze für die Übersicht (max. 160 Zeichen).
    */
   teaser: string;
   /**
@@ -733,7 +738,6 @@ export interface Dokumente {
    * Optional. Nach diesem Datum verschwindet das Dokument automatisch aus den Listen.
    */
   validUntil?: string | null;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1318,6 +1322,7 @@ export interface NewsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   publishedAt?: T;
+  category?: T;
   teaser?: T;
   image?: T;
   imageCaption?: T;
@@ -1466,7 +1471,6 @@ export interface DokumenteSelect<T extends boolean = true> {
   category?: T;
   version?: T;
   validUntil?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1487,7 +1491,6 @@ export interface DokumenteSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1626,6 +1629,112 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Texte, Bild und Links der Startseite. Beiträge und Termine erscheinen automatisch.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "startseite".
+ */
+export interface Startseite {
+  id: number;
+  /**
+   * Kurzer Satz in der grünen Leiste oben auf jeder Seite.
+   */
+  utilitySlogan?: string | null;
+  /**
+   * Die grosse Überschrift der Startseite.
+   */
+  heroTitle?: string | null;
+  heroIntro?: string | null;
+  /**
+   * Querformat. Der Alt-Text wird beim Bild gepflegt (Pflichtfeld).
+   */
+  heroImage?: (number | null) | Media;
+  /**
+   * Z. B. «Garten anfragen».
+   */
+  heroPrimary: {
+    label: string;
+    linkType: 'seite' | 'adresse';
+    page?: (number | null) | Seiten;
+    /**
+     * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+     */
+    url?: string | null;
+  };
+  /**
+   * Z. B. «Termine ansehen».
+   */
+  heroSecondary: {
+    label: string;
+    linkType: 'seite' | 'adresse';
+    page?: (number | null) | Seiten;
+    /**
+     * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+     */
+    url?: string | null;
+  };
+  /**
+   * Genau 4 Karten: z. B. Garten pachten, Termine, Formulare, Hütten.
+   */
+  quickLinks?:
+    | {
+        icon: 'sprout' | 'calendar' | 'document' | 'house' | 'book' | 'bug' | 'images' | 'megaphone';
+        title: string;
+        text?: string | null;
+        linkType: 'seite' | 'adresse';
+        page?: (number | null) | Seiten;
+        /**
+         * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Leer = «Rund ums Gärtnern».
+   */
+  gardenTitle?: string | null;
+  /**
+   * Genau 4 Karten: z. B. Gut zu wissen, Tiere im Garten, Bildergalerie, Inserate.
+   */
+  gardenLinks?:
+    | {
+        icon: 'sprout' | 'calendar' | 'document' | 'house' | 'book' | 'bug' | 'images' | 'megaphone';
+        title: string;
+        text?: string | null;
+        linkType: 'seite' | 'adresse';
+        page?: (number | null) | Seiten;
+        /**
+         * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+         */
+        url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  joinTitle?: string | null;
+  joinText?: string | null;
+  joinPrimary: {
+    label: string;
+    linkType: 'seite' | 'adresse';
+    page?: (number | null) | Seiten;
+    /**
+     * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+     */
+    url?: string | null;
+  };
+  joinSecondary: {
+    label: string;
+    linkType: 'seite' | 'adresse';
+    page?: (number | null) | Seiten;
+    /**
+     * Externe Website (https://…) oder Bereich dieser Website, z. B. /news oder /termine.
+     */
+    url?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
 }
 /**
  * Das Menü oben auf jeder Seite: bis zu 6 Hauptpunkte, je mit optionalen Unterpunkten.
@@ -1876,6 +1985,76 @@ export interface Oeffnungszeiten {
   generalNote?: string | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "startseite_select".
+ */
+export interface StartseiteSelect<T extends boolean = true> {
+  utilitySlogan?: T;
+  heroTitle?: T;
+  heroIntro?: T;
+  heroImage?: T;
+  heroPrimary?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+      };
+  heroSecondary?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+      };
+  quickLinks?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        text?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        id?: T;
+      };
+  gardenTitle?: T;
+  gardenLinks?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        text?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+        id?: T;
+      };
+  joinTitle?: T;
+  joinText?: T;
+  joinPrimary?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+      };
+  joinSecondary?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -31,7 +31,9 @@ Für saubere Tests eine eigene Datenbank nehmen: `DATABASE_URL=file:./test.db pn
 - `src/app/(frontend)/` Website · `src/app/(payload)/` Admin · `src/app/robots.ts`, `opengraph-image.tsx`, `icon.svg`
 - `src/lib/` Datenzugriff (`content.ts`, `getPage.ts`, `globals.ts`: Local API mit `overrideAccess: false`), Formatierung, ICS, SEO, Weiterleitungen
 - `src/seed.ts` + `src/seed/` Beispielinhalte (Platzhalter, keine echten Personendaten, Preise als Beispiel markiert)
-- Design-Tokens: `src/app/(frontend)/styles.css` · UI-Bausteine: `src/components/ui/` (shadcn) · Schrift: `src/fonts/`
+- Design-Tokens (DESIGN.md 2.4): `src/app/(frontend)/styles.css` – Farben `forest`, `cream`, `accent` …, Schriftrollen (`text-h1` usw.), Container (`container-page`). Die älteren Namen `brand-*`/`earth-*` zeigen auf die neuen Farben.
+- Startseite: `src/app/(frontend)/page.tsx`, Sektionen in `src/components/home/sections.tsx`, Karten (`QuickCard`, `PostCard`, `EventRow`, `StepCard`, `NewsletterForm`, `ImagePlaceholder`) daneben; Inhalte aus dem Global `startseite`, Rückfälle mit «(Platzhalter)» in `content.ts`.
+- UI-Bausteine: `src/components/ui/` (shadcn; `Button` mit den Varianten Primär, `outline` = Sekundär, `secondary` = Invers, `inverseOutline`) · Schriften Fraunces und Inter über `next/font/google` in `src/fonts/index.ts` (beim Build geladen, selbst ausgeliefert).
 
 **Hinweis shadcn-CLI:** `pnpm dlx shadcn@latest add …` trägt fälschlich das Paket `cn` ein. Danach `pnpm remove cn` ausführen und in den neuen Dateien `from "cn"` durch `from "@/lib/utils"` ersetzen.
 
@@ -50,7 +52,9 @@ Start 94 / Termine 100 / Gartenwissen 94 / Garten pachten 100 (Performance); Acc
 ## Offene Punkte
 - **404 im Browser:** Unbekannte Adressen unter dynamischen Routen (z. B. `/gibtsnicht`) liefern korrekt Status 404, aber der Inhalt wird im Production-Build erst per JavaScript dargestellt (Next-«Error-Shell»). Ursache nicht gefunden; Experimente ohne Wirkung: Draft-Banner entfernen, `revalidate` entfernen, `not-found.tsx` pro Segment, `notFound()` in `generateMetadata`.
 - **Datenbank:** Lokal SQLite (automatischer Schema-Abgleich), auf Vercel Postgres/Neon mit Migrationen. Nach jeder Schema-Änderung eine Migration erzeugen (`pnpm migrate:create`, mit `DATABASE_URL=postgres://…`) und einchecken. Deployment: `docs/deployment-vercel.md`.
-- **Formulare, E-Mail, Newsletter, Mitgliederbereich:** bewusst nicht enthalten (R13–R15).
+- **Formulare, E-Mail, Newsletter, Mitgliederbereich:** bewusst nicht enthalten (R13–R15). Das Newsletter-Formular in der Fusszeile ist deaktiviert (Platzhalter); «Mitgliederbereich» und die Sprachwahl DE/EN der Utility-Bar (DESIGN.md Abschnitt 4) fehlen absichtlich, bis es sie gibt.
+- **Logo:** Das Wappen (DESIGN.md Abschnitt 3) liegt nicht vor; bis zum Hochladen in den Vereinsdaten zeigt die Seite ein Platzhalter-Symbol mit der Wortmarke.
+- **Platzhalter-Texte:** Slogan, News-Kategorien (Aktuelles, Vereinsleben, Garten, Hinweis) und die Kartentexte der Startseite sind Vorschläge – vom Verein zu bestätigen.
 - **Hosting:** Vercel + Neon + Blob vorbereitet (`docs/deployment-vercel.md`), noch nicht mit echten Konten getestet. **Backups** sind offen.
 - **Inhalte:** Echte Texte, Preise (`Konditionen`), Personen, Rechtstexte (Impressum, Datenschutz) und Logo stehen aus; die Wissensartikel der alten Seite müssen mit denselben Adressen als Ratgeber angelegt werden, damit die Weiterleitungen greifen.
 - **Adressen sind flach:** Seiten haben nur eine Ebene (`/formulare-downloads`, nicht `/fuer-paechter/formulare`). Termin-Adressen enthalten das Datum, alte Termin-URLs leiten daher auf `/termine`.

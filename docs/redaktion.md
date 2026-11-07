@@ -69,3 +69,9 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Weiterleitungen:** Einstellungen → **Weiterleitungen**. «Von» ist die alte Adresse (z. B. `/alte-seite`), «Nach» eine Seite der Website oder eine andere Adresse. Die Liste der alten Adressen liegt als Vorlage in `docs/redirects-alt-neu.csv`.
 - **Wissensseiten der alten Website:** Neuen Ratgeber-Artikel mit der gleichen Adresse (Slug) wie früher anlegen – die Weiterleitung führt dann automatisch dorthin.
 - Sitemap und `robots.txt` werden automatisch erzeugt; es muss nichts gepflegt werden.
+
+## Startseite (Design-Überarbeitung)
+- **Startseite pflegen:** Einstellungen → **Startseite**. Dort stehen der Slogan in der grünen Leiste, Titel, Einleitung, Foto und die beiden Schaltflächen des Kopfbereichs, die 4 Schnellzugriff-Karten, die 4 Karten «Rund ums Gärtnern» und der grüne «Mitmachen»-Bereich. Ein Foto braucht immer einen Alt-Text (beim Bild unter «Bilder»).
+- **Automatisch:** Die 3 neuesten Beiträge, die 3 nächsten Termine und «Pacht in drei Schritten» (aus der Seite «Garten pachten», erster Baustein «Ablauf») erscheinen von selbst.
+- **Beiträge:** Bei jedem Beitrag jetzt eine **Kategorie** wählen. Der Teaser darf höchstens 160 Zeichen haben.
+- **Platzhalter:** Wo noch nichts eingetragen ist, steht «(Platzhalter)» im Text. Das ist ein Hinweis zum Ersetzen.

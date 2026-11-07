@@ -25,7 +25,7 @@ export async function TerminArchiv({ jahr }: { jahr: number | null }) {
                   <Link
                     href={`/termine/archiv/${j}`}
                     aria-current={j === gewaehlt ? 'page' : undefined}
-                    className={`rounded-md border px-3 py-1 ${j === gewaehlt ? 'bg-accent font-bold' : 'bg-card hover:bg-accent'}`}
+                    className={`rounded-md border px-3 py-1 ${j === gewaehlt ? 'bg-sage-100 font-bold' : 'bg-card hover:bg-sage-100'}`}
                   >
                     {j}
                   </Link>

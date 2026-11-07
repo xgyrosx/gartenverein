@@ -34,7 +34,7 @@ export default async function KategoriePage({ params }: Args) {
       <nav aria-label="Kategorien" className="mt-8">
         <ul className="flex flex-wrap gap-2">
           <li>
-            <Link href="/gartenwissen" className="block rounded-md border bg-card px-3 py-2 hover:bg-accent">
+            <Link href="/gartenwissen" className="block rounded-md border bg-card px-3 py-2 hover:bg-sage-100">
               Alle
             </Link>
           </li>
@@ -43,7 +43,7 @@ export default async function KategoriePage({ params }: Args) {
               <Link
                 href={`/gartenwissen/kategorie/${c.value}`}
                 aria-current={c.value === k.value ? 'page' : undefined}
-                className={`block rounded-md border px-3 py-2 ${c.value === k.value ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-accent'}`}
+                className={`block rounded-md border px-3 py-2 ${c.value === k.value ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-sage-100'}`}
               >
                 {c.label}
               </Link>

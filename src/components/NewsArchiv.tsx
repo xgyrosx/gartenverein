@@ -14,7 +14,7 @@ export async function NewsArchiv({ page }: { page: number }) {
         <ul className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {docs.map((n) => (
             <li key={n.id} className="flex">
-              <NewsCard news={n} />
+              <NewsCard news={n} headingLevel={2} />
             </li>
           ))}
         </ul>

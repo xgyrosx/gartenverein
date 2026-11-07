@@ -40,3 +40,6 @@ export const linkFields: Field[] = [
     },
   },
 ]
+
+/** Nur das Ziel (Seite oder Adresse), ohne Beschriftung – für Karten, bei denen der Titel der Link-Text ist. */
+export const targetFields: Field[] = linkFields.filter((f) => !('name' in f && f.name === 'label'))

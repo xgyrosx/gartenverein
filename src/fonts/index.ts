@@ -1,11 +1,19 @@
-import localFont from 'next/font/local'
+import { Fraunces, Inter } from 'next/font/google'
 
-/** Source Sans 3 (SIL OFL), selbst gehostet – keine Verbindung zu Google zur Laufzeit. */
-export const sourceSans = localFont({
-  src: [
-    { path: './source-sans-3-latin-wght-normal.woff2', style: 'normal', weight: '200 900' },
-    { path: './source-sans-3-latin-wght-italic.woff2', style: 'italic', weight: '200 900' },
-  ],
-  variable: '--font-source-sans',
+/**
+ * Schriften gemäss DESIGN.md 2.2. `next/font/google` lädt die Dateien beim Build herunter und liefert sie
+ * von der eigenen Domain aus – zur Laufzeit gibt es keine Verbindung zu Google.
+ */
+export const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-fraunces',
+  display: 'swap',
+})
+
+export const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-inter',
   display: 'swap',
 })

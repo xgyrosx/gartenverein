@@ -15,14 +15,14 @@ export function MobileNav({ items }: { items: NavItem[] }) {
   const close = () => setOpen(false)
 
   const linkClass = (href: string) =>
-    `block rounded-md px-3 py-3 text-lg font-medium hover:bg-accent ${pathname === href ? 'bg-accent text-accent-foreground' : ''}`
+    `block rounded-md px-3 py-3 text-lg font-medium hover:bg-sage-100 ${pathname === href ? 'bg-sage-100 text-forest' : ''}`
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="lg" className="lg:hidden">
-          <MenuIcon aria-hidden="true" />
-          Menü
+        <Button variant="outline" aria-label="Menü öffnen" className="size-12 p-0 sm:size-auto sm:px-5 sm:py-3 lg:hidden">
+          <MenuIcon aria-hidden="true" className="size-6" />
+          <span className="sr-only sm:not-sr-only">Menü</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="overflow-y-auto p-4">
@@ -33,7 +33,7 @@ export function MobileNav({ items }: { items: NavItem[] }) {
             {items.map((item) => (
               <li key={item.href + item.label}>
                 {item.highlight ? (
-                  <Button asChild size="lg" className="my-2 w-full text-base">
+                  <Button asChild className="my-2 w-full">
                     <NavLink href={item.href} external={item.external} onClick={close}>
                       {item.label}
                     </NavLink>

@@ -3,9 +3,10 @@ import React from 'react'
 
 import { DraftBanner } from '@/components/layout/DraftBanner'
 import { Banner } from '@/components/layout/Banner'
+import { UtilityBar } from '@/components/layout/UtilityBar'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
-import { sourceSans } from '@/fonts'
+import { fraunces, inter } from '@/fonts'
 import { getVereinsdaten } from '@/lib/globals'
 import { serverUrl } from '@/lib/url'
 import './styles.css'
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de-CH" className={sourceSans.variable}>
+    <html lang="de" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground antialiased">
         <a
           href="#inhalt"
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Zum Inhalt springen
         </a>
         <DraftBanner />
+        <UtilityBar />
         <Banner />
         <Header />
         <main id="inhalt" className="flex-1">

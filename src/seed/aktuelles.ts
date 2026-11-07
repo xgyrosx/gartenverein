@@ -17,6 +17,7 @@ export async function seedAktuelles({ payload, create, upload, count }: Ctx) {
         teaser: 'Am letzten Augustwochenende feiern wir wieder zusammen. Es gibt Grilladen, Salate aus dem eigenen Garten und Musik.',
         text: 'Das Sommerfest findet bei jedem Wetter statt. Bitte bringen Sie einen Salat oder ein Dessert mit. Getränke und Grillgut organisiert der Verein.',
         days: -3,
+        category: 'vereinsleben',
         withImage: true,
       },
       {
@@ -24,6 +25,7 @@ export async function seedAktuelles({ payload, create, upload, count }: Ctx) {
         teaser: 'Dank vieler fleissiger Hände stehen jetzt drei zusätzliche Kompostplätze am unteren Ende des Areals bereit.',
         text: 'Bitte trennen Sie Gartenabfälle sorgfältig: Rasenschnitt und Laub gehören auf getrennte Plätze. Eine Beschriftung hilft bei der Orientierung.',
         days: -14,
+        category: 'garten',
         withImage: false,
       },
       {
@@ -31,6 +33,7 @@ export async function seedAktuelles({ payload, create, upload, count }: Ctx) {
         teaser: 'Über 25 Mitglieder haben beim Frühlingseinsatz Wege gejätet, Beete vorbereitet und das Gewächshaus repariert.',
         text: 'Herzlichen Dank allen, die mitangepackt haben. Der nächste Arbeitseinsatz findet im Herbst statt, das Datum finden Sie bei den Terminen.',
         days: -35,
+        category: 'vereinsleben',
         withImage: true,
       },
     ]
@@ -40,6 +43,7 @@ export async function seedAktuelles({ payload, create, upload, count }: Ctx) {
         {
           title: n.title,
           teaser: n.teaser,
+          category: n.category,
           publishedAt: inDays(n.days),
           image: n.withImage ? bild.id : undefined,
           imageCaption: n.withImage ? 'Beispielbild (Platzhalter)' : undefined,

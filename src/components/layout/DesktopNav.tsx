@@ -11,13 +11,14 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 import type { NavItem } from '@/lib/resolveLink'
 
 export function DesktopNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
-  const itemClass = `${navigationMenuTriggerStyle()} text-base font-medium`
+  // NavLink gemäss DESIGN.md: Padding 12 × 14 px, Radius 8 px, Hover sage-100
+  const itemClass =
+    'inline-flex h-auto items-center rounded-lg bg-transparent px-3.5 py-3 text-base font-medium text-ink hover:bg-sage-100 focus:bg-sage-100 data-[active=true]:bg-sage-100 data-[active=true]:text-forest'
 
   return (
     <NavigationMenu viewport={false} aria-label="Hauptmenü" className="hidden lg:flex">
@@ -26,7 +27,7 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
           <NavigationMenuItem key={item.href + item.label}>
             {item.children.length > 0 ? (
               <>
-                <NavigationMenuTrigger className={`${itemClass} data-[state=open]:bg-accent`}>
+                <NavigationMenuTrigger className={`${itemClass} data-[state=open]:bg-sage-100`}>
                   {item.label}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -44,7 +45,7 @@ export function DesktopNav({ items }: { items: NavItem[] }) {
                 </NavigationMenuContent>
               </>
             ) : item.highlight ? (
-              <Button asChild size="lg" className="ml-2 text-base">
+              <Button asChild className="ml-2">
                 <NavLink href={item.href} external={item.external} aria-current={pathname === item.href ? 'page' : undefined}>
                   {item.label}
                 </NavLink>

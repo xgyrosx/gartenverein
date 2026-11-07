@@ -23,7 +23,7 @@ export async function Gartenjahr({ monat }: { monat: number | null }) {
               <Link
                 href={`/gartenwissen/gartenjahr/${i + 1}`}
                 aria-current={i + 1 === gewaehlt ? 'page' : undefined}
-                className={`block rounded-md border px-3 py-2 ${i + 1 === gewaehlt ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-accent'}`}
+                className={`block rounded-md border px-3 py-2 ${i + 1 === gewaehlt ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-sage-100'}`}
               >
                 {name}
               </Link>

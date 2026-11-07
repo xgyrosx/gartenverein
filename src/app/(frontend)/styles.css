@@ -2,72 +2,89 @@
 @import "tw-animate-css";
 
 /* =====================================================================
-   Design-Tokens – hier zentral anpassen.
-   1. Farbpaletten: brand (Grün) und earth (Erdtöne)
-   2. Semantische Farben (--primary usw.), von den UI-Bausteinen genutzt
-   3. Radius, Seitenbreiten, Schrift
+   Design-Tokens gemäss DESIGN.md (Abschnitt 2) – hier zentral anpassen.
+   1. DESIGN-Tokens (forest, cream, accent …, Schriften, Radien)
+   2. Bisherige Namen (brand-*, earth-*) zeigen auf die neuen Farben,
+      damit alle Seiten einheitlich aussehen
+   3. Semantische Variablen für die UI-Bausteine (--primary usw.)
    ===================================================================== */
 
 @theme {
-  --color-brand-50: #f2f8ef;
-  --color-brand-100: #e0efd9;
-  --color-brand-200: #c2dfb5;
-  --color-brand-300: #98c789;
-  --color-brand-400: #6aa95a;
-  --color-brand-500: #478c3b;
-  --color-brand-600: #36702e;
-  --color-brand-700: #2c5a28;
-  --color-brand-800: #264924;
-  --color-brand-900: #213d20;
-  --color-brand-950: #0f220f;
+  /* 1. DESIGN.md 2.4 */
+  --color-forest: #2f5d2a;
+  --color-leaf: #3e8e34;
+  --color-sage-100: #e6efd9;
+  --color-sage-200: #dfe9cf;
+  --color-sage-300: #cfe0b9;
+  --color-cream: #fbf8f1;
+  --color-paper: #ffffff;
+  --color-ink: #1f2a1c;
+  --color-ink-soft: #3d4a38;
+  --color-line: #e3e0d4;
+  --color-accent: #b4432f;
+  --color-on-dark-soft: #dcebcb;
+  /* Hover der primären Schaltfläche («leicht abdunkeln») */
+  --color-accent-dark: #9a3624;
 
-  --color-earth-50: #faf7f2;
-  --color-earth-100: #f1ebe0;
-  --color-earth-200: #e2d6c1;
-  --color-earth-300: #cfbb9c;
-  --color-earth-400: #b9996f;
-  --color-earth-500: #a68054;
-  --color-earth-600: #8f6b46;
-  --color-earth-700: #765539;
-  --color-earth-800: #62472f;
-  --color-earth-900: #523c29;
-  --color-earth-950: #2d2015;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
-  /* Seitenbreiten: max-w-page (Raster), max-w-content (Lesetext) */
-  --container-page: 64rem;
+  --radius-card: 20px;
+  --radius-panel: 28px;
+
+  /* Seitenbreiten: max-w-page = Container 1200 px, max-w-content = Lesetext */
+  --container-page: 75rem;
   --container-content: 48rem;
 
-  /* Schriftgrössen: Basis etwas grösser für gute Lesbarkeit */
-  --text-base: 1.125rem;
-  --text-base--line-height: 1.65;
+  /* 2. Bisherige Namen → neue Farben */
+  --color-brand-50: #f4f8ee;
+  --color-brand-100: #e6efd9;
+  --color-brand-200: #dfe9cf;
+  --color-brand-300: #cfe0b9;
+  --color-brand-400: #6aa95a;
+  --color-brand-500: #3e8e34;
+  --color-brand-600: #36702e;
+  --color-brand-700: #2f5d2a;
+  --color-brand-800: #2f5d2a;
+  --color-brand-900: #264a22;
+  --color-brand-950: #1f2a1c;
+
+  --color-earth-50: #fbf8f1;
+  --color-earth-100: #f3efe3;
+  --color-earth-200: #e3e0d4;
+  --color-earth-300: #cfcabb;
+  --color-earth-400: #b3ad9a;
+  --color-earth-500: #8c8672;
+  --color-earth-600: #5f6a59;
+  --color-earth-700: #3d4a38;
+  --color-earth-800: #2f3a2b;
+  --color-earth-900: #263122;
+  --color-earth-950: #1f2a1c;
 }
 
 :root {
-  --radius: 0.5rem;
+  /* 3. Semantische Variablen (UI-Bausteine) */
+  --radius: 0.75rem;
 
-  --background: var(--color-earth-50);
-  --foreground: var(--color-earth-950);
-  --card: #ffffff;
-  --card-foreground: var(--color-earth-950);
-  --popover: #ffffff;
-  --popover-foreground: var(--color-earth-950);
-  --primary: var(--color-brand-700);
+  --background: var(--color-cream);
+  --foreground: var(--color-ink);
+  --card: var(--color-paper);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-paper);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-accent);
   --primary-foreground: #ffffff;
-  --secondary: var(--color-earth-100);
-  --secondary-foreground: var(--color-earth-900);
+  --secondary: var(--color-sage-100);
+  --secondary-foreground: var(--color-forest);
   --muted: var(--color-earth-100);
-  --muted-foreground: var(--color-earth-700);
-  --accent: var(--color-brand-100);
-  --accent-foreground: var(--color-brand-900);
+  --muted-foreground: var(--color-ink-soft);
   --destructive: #b42318;
-  --border: var(--color-earth-200);
-  --input: var(--color-earth-300);
-  --ring: var(--color-brand-600);
+  --border: var(--color-line);
+  --input: #cfcabb;
+  --ring: var(--color-forest);
 }
 
 @theme inline {
-  --font-sans: var(--font-source-sans), ui-sans-serif, system-ui, sans-serif;
-
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -80,8 +97,6 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-border: var(--border);
   --color-input: var(--input);
@@ -93,8 +108,65 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* Schriftrollen aus DESIGN.md 2.2 (Desktop ab 1024 px, sonst Mobilwert) */
+@utility text-h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.05;
+  @media (min-width: 1024px) { font-size: 62px; }
+}
+@utility text-h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
+  @media (min-width: 1024px) { font-size: 40px; }
+}
+@utility text-h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 21px;
+  line-height: 1.25;
+  @media (min-width: 1024px) { font-size: 24px; }
+}
+@utility text-lead {
+  font-size: 17px;
+  line-height: 1.5;
+  @media (min-width: 1024px) { font-size: 19px; }
+}
+@utility text-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+/* Container: max. 1200 px, seitlich 20 px (ab 640 px 32 px) */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-page);
+  padding-inline: 20px;
+  @media (min-width: 640px) { padding-inline: 32px; }
+}
+/* Abstand zwischen Sektionen: 56 px mobil, 84 px Desktop */
+@utility section-y {
+  padding-block: 56px;
+  @media (min-width: 1024px) { padding-block: 84px; }
+}
+@utility shadow-hover {
+  box-shadow: 0 8px 24px rgba(31, 42, 28, 0.12);
+}
+
+/* Überschriften immer in Fraunces 600 (stärker als einzelne Utility-Klassen) */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
 @layer base {
-  html { scroll-padding-top: 5rem; }
+  html { scroll-padding-top: 6rem; }
   body { background: var(--background); color: var(--foreground); }
   /* Gut sichtbarer Fokus für Tastaturbedienung */
   :focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
@@ -103,7 +175,7 @@
 /* Darstellung von Rich-Text-Inhalten aus dem CMS */
 .richtext { font-size: 1.125rem; line-height: 1.75; }
 .richtext > * + * { margin-top: 1rem; }
-.richtext h1, .richtext h2, .richtext h3, .richtext h4 { font-weight: 700; line-height: 1.25; color: var(--color-brand-900); }
+.richtext h1, .richtext h2, .richtext h3, .richtext h4 { font-weight: 600; line-height: 1.25; color: var(--color-brand-900); }
 .richtext h2 { font-size: 1.75rem; margin-top: 2rem; }
 .richtext h3 { font-size: 1.375rem; margin-top: 1.5rem; }
 .richtext ul { list-style: disc; padding-left: 1.5rem; }

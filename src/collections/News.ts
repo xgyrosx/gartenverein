@@ -4,6 +4,14 @@ import { revalidateAfterChange, revalidateAfterDelete } from '@/hooks/revalidate
 import { loggedIn, publishedOrLoggedIn } from '@/access'
 import { slugField } from '@/fields/slug'
 
+// Platzhalter-Kategorien – vom Verein zu bestätigen oder anzupassen.
+export const newsKategorien = [
+  { label: 'Aktuelles', value: 'aktuelles' },
+  { label: 'Vereinsleben', value: 'vereinsleben' },
+  { label: 'Garten', value: 'garten' },
+  { label: 'Hinweis', value: 'hinweis' },
+]
+
 export const News: CollectionConfig = {
   slug: 'news',
   labels: { singular: 'News-Beitrag', plural: 'News' },
@@ -40,12 +48,21 @@ export const News: CollectionConfig = {
       },
     },
     {
+      name: 'category',
+      type: 'select',
+      label: 'Kategorie',
+      required: true,
+      defaultValue: 'aktuelles',
+      options: newsKategorien,
+      admin: { position: 'sidebar', description: 'Wird auf der Startseite und in der Übersicht beim Beitrag angezeigt.' },
+    },
+    {
       name: 'teaser',
       type: 'textarea',
       label: 'Teaser',
       required: true,
-      maxLength: 300,
-      admin: { description: 'Ein bis zwei Sätze für die Übersicht (max. 300 Zeichen).' },
+      maxLength: 160,
+      admin: { description: 'Ein bis zwei Sätze für die Übersicht (max. 160 Zeichen).' },
     },
     {
       name: 'image',

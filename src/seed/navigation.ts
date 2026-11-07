@@ -47,7 +47,7 @@ export async function seedNavigation({ payload, seite }: Ctx) {
             { label: 'Das Gartenjahr', linkType: 'adresse' as const, url: '/gartenwissen/gartenjahr' },
           ],
         },
-        { ...(await seite('Garten pachten', 'garten-pachten')), highlight: true },
+        { ...(await seite('Garten anfragen', 'garten-pachten')), highlight: true },
       ],
     },
   })

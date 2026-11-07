@@ -29,6 +29,7 @@ import { Konditionen } from './globals/Konditionen'
 import { Hinweisbanner } from './globals/Hinweisbanner'
 import { Oeffnungszeiten } from './globals/Oeffnungszeiten'
 import { Navigation } from './globals/Navigation'
+import { Startseite } from './globals/Startseite'
 import { Vereinsdaten } from './globals/Vereinsdaten'
 
 const filename = fileURLToPath(import.meta.url)
@@ -43,7 +44,7 @@ export default buildConfig({
     },
   },
   collections: [Seiten, News, Termine, Alben, Areale, Personen, Ratgeber, Gartenangebote, Dokumente, Media, Users],
-  globals: [Navigation, Hinweisbanner, Fusszeile, Vereinsdaten, Konditionen, Oeffnungszeiten],
+  globals: [Startseite, Navigation, Hinweisbanner, Fusszeile, Vereinsdaten, Konditionen, Oeffnungszeiten],
   editor: lexicalEditor(),
   i18n: {
     supportedLanguages: { de },

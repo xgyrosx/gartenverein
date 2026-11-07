@@ -26,13 +26,13 @@ export default async function GartenwissenPage() {
           </li>
           {ratgeberKategorien.map((k) => (
             <li key={k.value}>
-              <Link href={`/gartenwissen/kategorie/${k.value}`} className="block rounded-md border bg-card px-3 py-2 hover:bg-accent">
+              <Link href={`/gartenwissen/kategorie/${k.value}`} className="block rounded-md border bg-card px-3 py-2 hover:bg-sage-100">
                 {k.label}
               </Link>
             </li>
           ))}
           <li>
-            <Link href="/gartenwissen/gartenjahr" className="block rounded-md border border-brand-700 bg-card px-3 py-2 font-medium hover:bg-accent">
+            <Link href="/gartenwissen/gartenjahr" className="block rounded-md border border-brand-700 bg-card px-3 py-2 font-medium hover:bg-sage-100">
               Gartenjahr (nach Monat)
             </Link>
           </li>

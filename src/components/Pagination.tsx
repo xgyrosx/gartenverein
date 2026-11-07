@@ -10,7 +10,7 @@ export function Pagination({ page, totalPages, basePath }: { page: number; total
       <ul className="flex flex-wrap items-center gap-2">
         {page > 1 && (
           <li>
-            <Link href={href(page - 1)} className={`${item} bg-card hover:bg-accent`} rel="prev">
+            <Link href={href(page - 1)} className={`${item} bg-card hover:bg-sage-100`} rel="prev">
               ← Zurück
             </Link>
           </li>
@@ -21,7 +21,7 @@ export function Pagination({ page, totalPages, basePath }: { page: number; total
               href={href(n)}
               aria-current={n === page ? 'page' : undefined}
               aria-label={`Seite ${n}`}
-              className={`${item} ${n === page ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-accent'}`}
+              className={`${item} ${n === page ? 'bg-primary font-bold text-primary-foreground' : 'bg-card hover:bg-sage-100'}`}
             >
               {n}
             </Link>
@@ -29,7 +29,7 @@ export function Pagination({ page, totalPages, basePath }: { page: number; total
         ))}
         {page < totalPages && (
           <li>
-            <Link href={href(page + 1)} className={`${item} bg-card hover:bg-accent`} rel="next">
+            <Link href={href(page + 1)} className={`${item} bg-card hover:bg-sage-100`} rel="next">
               Weiter →
             </Link>
           </li>
