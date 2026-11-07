@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { monatsOptionen } from '@/collections/Ratgeber'
 import { kategorieLabel, RatgeberRaster } from '@/components/gartenwissen/RatgeberKarte'
@@ -9,6 +8,7 @@ import { RichText } from '@/components/RichText'
 import { getPublishedSlugs, getRatgeber } from '@/lib/content'
 import { buildMetadata } from '@/lib/seo'
 import type { Ratgeber } from '@/payload-types'
+import { redirectOrNotFound } from '@/lib/redirects'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -19,14 +19,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const r = await getRatgeber(slug)
-  if (!r) notFound()
-  return buildMetadata({ seo: r.meta, fallbackTitle: r.title, fallbackDescription: r.teaser, fallbackImage: r.image })
+  if (!r) return redirectOrNotFound(`/gartenwissen/${slug}`)
+  return buildMetadata({ path: `/gartenwissen/${slug}`, seo: r.meta, fallbackTitle: r.title, fallbackDescription: r.teaser, fallbackImage: r.image })
 }
 
 export default async function RatgeberDetail({ params }: Args) {
   const { slug } = await params
   const r = await getRatgeber(slug)
-  if (!r) notFound()
+  if (!r) return redirectOrNotFound(`/gartenwissen/${slug}`)
   const months = (r.months ?? []).map((m) => monatsOptionen.find((o) => o.value === m)?.label).filter(Boolean)
   const related = (r.related ?? []).filter((x): x is Ratgeber => typeof x === 'object')
   return (

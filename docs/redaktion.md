@@ -63,3 +63,9 @@ Anmelden unter `/admin` mit E-Mail und Passwort. Links stehen die Bereiche **Inh
 - **Album anlegen:** Inhalte → **Alben** → «Neu erstellen». Titel, Jahr und Bilder wählen (mehrere auf einmal; das erste Bild ist das Titelbild). Die Galerie ordnet die Alben nach Jahr.
 - **Bilder hochladen:** Inhalte → **Bilder**. Jedes Bild braucht einen Alt-Text; optional ein Bildnachweis («Foto: …»). Beides erscheint in der Grossansicht. Sehr grosse Fotos werden beim Hochladen automatisch auf höchstens 2000 Pixel Breite verkleinert.
 - **Grossansicht:** Besucher klicken ein Bild an, blättern mit den Pfeiltasten oder Wischen und schliessen mit Esc.
+
+## Suchmaschinen und alte Adressen (R12)
+- **SEO-Felder:** Bei Seiten, News, Termine, Areale und Ratgeber gibt es den Bereich «SEO» (Titel, Beschreibung, Bild). «Automatisch generieren» schlägt Werte aus dem Inhalt vor; leer gelassene Felder werden automatisch aus dem Inhalt gefüllt.
+- **Weiterleitungen:** Einstellungen → **Weiterleitungen**. «Von» ist die alte Adresse (z. B. `/alte-seite`), «Nach» eine Seite der Website oder eine andere Adresse. Die Liste der alten Adressen liegt als Vorlage in `docs/redirects-alt-neu.csv`.
+- **Wissensseiten der alten Website:** Neuen Ratgeber-Artikel mit der gleichen Adresse (Slug) wie früher anlegen – die Weiterleitung führt dann automatisch dorthin.
+- Sitemap und `robots.txt` werden automatisch erzeugt; es muss nichts gepflegt werden.

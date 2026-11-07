@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { terminKategorien } from '@/collections/Termine'
 import { DokumentEintrag } from '@/components/DokumentListe'
@@ -12,6 +11,7 @@ import { lexicalToPlainText } from '@/lib/richtext'
 import { buildMetadata } from '@/lib/seo'
 import { serverUrl } from '@/lib/url'
 import type { Areale } from '@/payload-types'
+import { redirectOrNotFound } from '@/lib/redirects'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -22,8 +22,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const t = await getTermin(slug)
-  if (!t) notFound()
-  return buildMetadata({
+  if (!t) return redirectOrNotFound(`/termine/${slug}`)
+  return buildMetadata({ path: `/termine/${slug}`,
     seo: t.meta,
     fallbackTitle: t.title,
     fallbackDescription: `${formatRange(t.startDate, t.endDate)}${terminOrt(t) ? ` – ${terminOrt(t)}` : ''}`,
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Args): Promise<Metadata> {
 export default async function TerminDetail({ params }: Args) {
   const { slug } = await params
   const t = await getTermin(slug)
-  if (!t) notFound()
+  if (!t) return redirectOrNotFound(`/termine/${slug}`)
   const ort = terminOrt(t)
   const areal = typeof t.areal === 'object' && t.areal ? (t.areal as Areale) : null
   const kategorie = terminKategorien.find((k) => k.value === t.category)?.label

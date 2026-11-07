@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
 import { getNews, getPublishedSlugs } from '@/lib/content'
 import { formatDate } from '@/lib/format'
 import { buildMetadata } from '@/lib/seo'
+import { redirectOrNotFound } from '@/lib/redirects'
 
 
 type Args = { params: Promise<{ slug: string }> }
@@ -19,14 +19,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const news = await getNews(slug)
-  if (!news) notFound()
-  return buildMetadata({ seo: news.meta, fallbackTitle: news.title, fallbackDescription: news.teaser, fallbackImage: news.image })
+  if (!news) return redirectOrNotFound(`/news/${slug}`)
+  return buildMetadata({ path: `/news/${slug}`, seo: news.meta, fallbackTitle: news.title, fallbackDescription: news.teaser, fallbackImage: news.image })
 }
 
 export default async function NewsDetail({ params }: Args) {
   const { slug } = await params
   const news = await getNews(slug)
-  if (!news) notFound()
+  if (!news) return redirectOrNotFound(`/news/${slug}`)
   return (
     <article className="mx-auto max-w-content px-4 py-12">
       <p>

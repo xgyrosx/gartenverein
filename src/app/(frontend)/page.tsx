@@ -3,13 +3,18 @@ import type { Metadata } from 'next'
 import { PageView } from '@/components/PageView'
 import { getPage } from '@/lib/getPage'
 import { buildMetadata } from '@/lib/seo'
+import { describeLayout } from '@/lib/seo-defaults'
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage('start')
-  const meta = buildMetadata({ seo: page?.meta })
-  return meta.title ? meta : { ...meta, title: undefined }
+  const { title, ...rest } = buildMetadata({
+    seo: page?.meta,
+    fallbackDescription: page ? describeLayout(page.layout) : undefined,
+    path: '/',
+  })
+  // Die Startseite zeigt nur den Vereinsnamen (bzw. den SEO-Titel) ohne Zusatz im Tab.
+  return { ...rest, ...(typeof title === 'string' ? { title: { absolute: title } } : {}) }
 }
-
 
 export default async function HomePage() {
   const page = await getPage('start')

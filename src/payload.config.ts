@@ -1,5 +1,6 @@
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { de } from '@payloadcms/translations/languages/de'
+import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
@@ -9,6 +10,9 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Users } from './collections/Users'
+import { revalidateAfterChange, revalidateAfterDelete } from './hooks/revalidate'
+import { lexicalToPlainText } from './lib/richtext'
+import { defaultSeoImage, describeLayout, truncate } from './lib/seo-defaults'
 import { Media } from './collections/Media'
 import { Alben } from './collections/Alben'
 import { Areale } from './collections/Areale'
@@ -84,11 +88,42 @@ export default buildConfig({
         ],
       },
     }),
+    // Suchmaschinen-Felder (Titel, Beschreibung, Vorschaubild) mit sinnvollen Vorschlägen aus dem Inhalt
     seoPlugin({
       collections: ['seiten', 'news', 'termine', 'areale', 'ratgeber'],
       uploadsCollection: 'media',
-      generateTitle: ({ doc }) => (doc as { title?: string; name?: string }).title ?? (doc as { name?: string }).name ?? '',
-      generateDescription: ({ doc }) => (doc as { teaser?: string; summary?: string }).teaser ?? (doc as { summary?: string }).summary ?? '',
+      generateTitle: ({ doc }) => {
+        const d = doc as { title?: string; name?: string }
+        return d.title ?? d.name ?? ''
+      },
+      generateDescription: ({ doc }) => {
+        const d = doc as { teaser?: string; summary?: string; layout?: unknown; description?: unknown }
+        return d.teaser ?? d.summary ?? (d.layout ? describeLayout(d.layout) : truncate(lexicalToPlainText(d.description)))
+      },
+      generateImage: ({ doc }) => defaultSeoImage(doc as Record<string, unknown>),
+    }),
+    // Weiterleitungen alter Adressen (siehe docs/redirects-alt-neu.csv)
+    redirectsPlugin({
+      collections: ['seiten', 'news', 'termine', 'areale', 'ratgeber'],
+      overrides: {
+        admin: { group: 'Einstellungen', description: 'Leitet alte Adressen auf neue Seiten um (z. B. von der früheren Website).' },
+        hooks: { afterChange: [revalidateAfterChange], afterDelete: [revalidateAfterDelete] },
+        fields: ({ defaultFields }) =>
+          defaultFields.map((f) =>
+            'name' in f && f.name === 'from'
+              ? {
+                  ...f,
+                  hooks: {
+                    // Immer klein geschrieben und ohne Schluss-Schrägstrich speichern, damit der Abgleich zuverlässig ist.
+                    beforeValidate: [
+                      ({ value }: { value?: unknown }) =>
+                        typeof value === 'string' ? (value.trim().toLowerCase().replace(/^(?!\/|https?:)/, '/').replace(/(.)\/+$/, '$1')) : value,
+                    ],
+                  },
+                }
+              : f,
+          ),
+      },
     }),
   ],
 })

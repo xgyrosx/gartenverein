@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { type GalerieBild, Lightbox } from '@/components/galerie/Lightbox'
 import { getAlbum, getPublishedSlugs } from '@/lib/content'
 import { formatDate } from '@/lib/format'
 import type { Media } from '@/payload-types'
+import { redirectOrNotFound } from '@/lib/redirects'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const a = await getAlbum(slug)
-  if (!a) notFound()
+  if (!a) return redirectOrNotFound(`/galerie/${slug}`)
   return { title: a.title, description: a.description ?? undefined }
 }
 
@@ -37,7 +37,7 @@ function toBild(m: Media): GalerieBild | null {
 export default async function AlbumPage({ params }: Args) {
   const { slug } = await params
   const a = await getAlbum(slug)
-  if (!a) notFound()
+  if (!a) return redirectOrNotFound(`/galerie/${slug}`)
   const bilder = (Array.isArray(a.images) ? a.images : [])
     .filter((i): i is Media => typeof i === 'object')
     .map(toBild)

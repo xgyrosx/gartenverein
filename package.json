@@ -14,11 +14,13 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed.ts",
-    "db:init": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/db-init.ts"
+    "db:init": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/db-init.ts",
+    "redirects:import": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/import-redirects.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "3.93.0",
     "@payloadcms/next": "3.93.0",
+    "@payloadcms/plugin-redirects": "3.93.0",
     "@payloadcms/plugin-search": "3.93.0",
     "@payloadcms/plugin-seo": "3.93.0",
     "@payloadcms/richtext-lexical": "3.93.0",

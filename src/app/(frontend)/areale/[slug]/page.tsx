@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { Img } from '@/components/Img'
 import { RichText } from '@/components/RichText'
 import { getAreal, getPublishedSlugs } from '@/lib/content'
 import { osmLink } from '@/lib/osm'
 import { buildMetadata } from '@/lib/seo'
+import { redirectOrNotFound } from '@/lib/redirects'
 
 type Args = { params: Promise<{ slug: string }> }
 
@@ -17,14 +17,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Args): Promise<Metadata> {
   const { slug } = await params
   const a = await getAreal(slug)
-  if (!a) notFound()
-  return buildMetadata({ seo: a.meta, fallbackTitle: a.name, fallbackDescription: a.summary })
+  if (!a) return redirectOrNotFound(`/areale/${slug}`)
+  return buildMetadata({ path: `/areale/${slug}`, seo: a.meta, fallbackTitle: a.name, fallbackDescription: a.summary })
 }
 
 export default async function ArealDetail({ params }: Args) {
   const { slug } = await params
   const a = await getAreal(slug)
-  if (!a) notFound()
+  if (!a) return redirectOrNotFound(`/areale/${slug}`)
   const images = (Array.isArray(a.images) ? a.images : []).filter((i) => typeof i === 'object')
   const address = [a.street, [a.zip, a.city].filter(Boolean).join(' ')].filter(Boolean)
   return (
