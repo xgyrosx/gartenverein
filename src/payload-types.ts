@@ -478,6 +478,7 @@ export interface Media {
    * Optional, z. B. «Foto: Vorname Nachname». Wird in der Galerie angezeigt.
    */
   credit?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -732,6 +733,7 @@ export interface Dokumente {
    * Optional. Nach diesem Datum verschwindet das Dokument automatisch aus den Listen.
    */
   validUntil?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1464,6 +1466,7 @@ export interface DokumenteSelect<T extends boolean = true> {
   category?: T;
   version?: T;
   validUntil?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1484,6 +1487,7 @@ export interface DokumenteSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   credit?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

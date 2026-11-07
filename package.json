@@ -17,7 +17,7 @@
     "db:init": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/db-init.ts",
     "redirects:import": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/import-redirects.ts",
     "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
-    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create"
+    "migrate:create": "cross-env BLOB_READ_WRITE_TOKEN=vercel_blob_rw_schema_nurzumerzeugen NODE_OPTIONS=--no-deprecation payload migrate:create"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.93.0",

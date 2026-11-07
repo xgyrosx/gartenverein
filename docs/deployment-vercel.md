@@ -10,22 +10,14 @@ Die Website läuft auf Vercel mit **Neon** (Postgres) für die Daten und **Verce
 5. **Weitere Variablen** (Settings → Environment Variables, für Production und Preview):
    - `PAYLOAD_SECRET` – langer Zufallswert (z. B. `openssl rand -hex 32`)
    - `NEXT_PUBLIC_SERVER_URL` – optional; ohne Angabe nimmt die Website die Vercel-Adresse. Bei eigener Domain hier eintragen.
-6. **Zugangsdaten holen und Datenbank füllen** (vom eigenen Rechner, mit Vercel CLI `npm i -g vercel`, einmal `vercel link`):
-   ```bash
-   vercel env pull .env.vercel          # nicht ins Git einchecken!
-   set -a; source .env.vercel; set +a   # lädt DATABASE_URL, BLOB_READ_WRITE_TOKEN, PAYLOAD_SECRET …
-   DATABASE_URL="$DATABASE_URL_UNPOOLED" pnpm migrate   # Tabellen anlegen
-   pnpm seed                                            # Beispielinhalte (Bilder/PDFs landen in Blob)
-   pnpm redirects:import                                # optional: Weiterleitungen der alten Website
-   ```
-   Seed vor dem ersten Deployment ausführen: Dann bauen die statischen Seiten gleich mit Inhalt.
-7. **Deployen:** In Vercel «Deploy» (bzw. einen Commit pushen). Der Build führt automatisch offene Migrationen aus (`scripts/build.mjs`) und baut danach die Seiten.
+6. **Beispielinhalte einspielen (einmalig):** Die Zugangsdaten von Neon und Blob sind in Vercel «geschützt» und lassen sich **nicht** auf den eigenen Rechner herunterladen (`vercel env pull` liefert nur Platzhalter). Deshalb übernimmt der Build das Einspielen: Setze die Variable `SEED_ON_BUILD=1` (Production). Der nächste Build füllt die Datenbank mit den Beispielinhalten und lädt die Beispielbilder nach Blob, **aber nur, wenn es noch keine Seiten gibt** (`src/scripts/seed-if-empty.ts`); danach legt er die Weiterleitungen der alten Website an. Variable danach wieder entfernen (schadet aber nicht, weil bestehende Inhalte nie überschrieben werden).
+7. **Deployen:** In Vercel «Deploy» (bzw. einen Commit pushen). Der Build führt automatisch offene Migrationen aus (`scripts/build.mjs`), spielt bei gesetztem `SEED_ON_BUILD` die Beispielinhalte ein und baut danach die Seiten.
 8. **Ersten Admin anlegen:** `https://<deine-adresse>/admin` öffnen, erster Benutzer wird `admin`.
 
 ## Laufender Betrieb
 - **Inhalte** pflegt die Redaktion im Admin; nach «Veröffentlichen» aktualisiert sich die Website von selbst.
 - **Neue Pull Requests/Branches** erzeugen Preview-Deployments auf derselben Datenbank. Für Tests mit eigenen Daten einen Neon-Branch pro Preview nutzen (Integration-Einstellung) – sonst ändern Previews die echten Daten nicht, lesen sie aber.
-- **Schema ändern** (neue Felder/Collections): lokal mit einer Postgres-Datenbank `pnpm migrate:create <name>` ausführen und die Dateien in `src/migrations/` einchecken. Der nächste Build wendet sie an. Ohne Migration schlägt die Seite auf Vercel fehl, weil das Schema nicht automatisch angepasst wird.
+- **Schema ändern** (neue Felder/Collections): lokal mit einer Postgres-Datenbank `pnpm migrate:create <name>` ausführen (das Skript schaltet das Blob-Plugin mit einem Platzhalter-Token ein, damit dessen Zusatzfelder im Schema stehen) und die Dateien in `src/migrations/` einchecken. Der nächste Build wendet sie an. Ohne Migration schlägt die Seite auf Vercel fehl, weil das Schema nicht automatisch angepasst wird.
 - **Backups:** Neon bietet Wiederherstellung über die Zeit (je nach Plan); Blob-Dateien sind nicht versioniert. Für Produktivbetrieb regelmässig exportieren.
 
 ## Grenzen und Hinweise
